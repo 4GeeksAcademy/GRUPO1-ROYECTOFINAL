@@ -1,0 +1,36 @@
+.user-posts-container {
+    padding: 20px;
+    background-color: #F9F3EC;
+    font-family: 'Quicksand', sans-serif;
+    width: 80%;
+    margin: auto;
+    padding-bottom: 4rem!important;
+  }
+  .user-posts-main-container {
+    background-color: #F9F3EC;
+    margin-top: -40px;
+  }
+  .user-post-card {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    height: 270px; /* Ajuste de la altura del card */
+  }
+  
+  .user-post-card-img {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    height: 130px; /* Tamaño de imagen reducido */
+    object-fit: cover;
+    padding: 5px 5px;
+  }
+  
+  .user-post-card-body {
+    padding: 10px; /* Menos separación entre los elementos */
+    text-align: center;
+  }
+.text-card {
+    padding: 0!important;
+}
