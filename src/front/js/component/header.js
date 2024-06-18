@@ -47,6 +47,13 @@ export const Header = () => {
               Login
             </button>
           </Link>
+          <Link to="/register">
+            <button 
+              className="btn login-button header-login-button"
+            >
+              Register
+            </button>
+          </Link>
         </div>
       </div>
     </nav>

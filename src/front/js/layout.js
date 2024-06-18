@@ -12,6 +12,7 @@ import injectContext from "./store/appContext";
 import { Header } from "./component/header";
 import Footer  from "./component/footer";
 import UserProfile from "./pages/userProfile";
+import CreatePost from "./pages/createPost";
 
 
 //create your first component
@@ -29,6 +30,7 @@ const Layout = () => {
                     <Header />
                     <Routes>
                         <Route element={<Register></Register>}  path="/register"/>
+                        <Route element={<CreatePost />} path="/create-post" />
                         <Route element={<Home />} path="/" />
                         <Route element={<UserProfile />} path="/profile" />
                         <Route element={<Demo />} path="/demo" />

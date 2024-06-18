@@ -1,5 +1,3 @@
-/* userProfile.css */
-
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
 
 .user-profile-background {
@@ -12,20 +10,25 @@
   font-family: 'Quicksand', sans-serif;
 }
 
+.button-container-create {
+  display: flex;
+  justify-content: center;
+}
+
 .user-profile-card {
   position: relative;
   background-color: white;
   border-radius: 10px;
   width: 90%;
   max-width: 800px;
-  padding-top: 100px; /* Space for the image */
+  padding-top: 100px;
   text-align: center;
-  height: 440px;
+  height: auto;
   margin-top: 4rem;
 }
 
 .card-text {
-    padding: 2rem!important;
+  padding: 2rem !important;
 }
 
 .user-image-container {
@@ -77,6 +80,16 @@
   color: #565656;
 }
 
+.add-button {
+  position: absolute;
+  top: 10px;
+  right: 70px;
+  border: none;
+  background-color: transparent;
+  font-size: 15px;
+  color: #565656;
+}
+
 .message-button-container {
   position: absolute;
   top: 10px;
@@ -101,7 +114,139 @@
   font-size: 0.8em;
   font-family: 'Kanit', sans-serif;
 }
+
 .user-profile-card .card-title {
   font-size: 2em;
   color: #D95383;
+}
+
+.add-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: -40px;
+}
+
+.add-button {
+  background-color: #D95383;
+  color: white;
+  font-family: 'Kanit', sans-serif;
+  border-radius: 20px;
+  border: none;
+  padding: 10px 20px;
+  margin-top: px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.add-button:hover {
+  background-color: #C74370;
+  transform: scale(1.05);
+}
+
+/* Media queries for responsive design */
+@media (max-width: 968px) {
+  .add-button {
+    position: static;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-profile-card {
+    padding-top: 80px; 
+    width: 100%;
+  }
+
+  .user-image {
+    width: 150px;
+    height: 150px;
+  }
+
+  .user-stat {
+    font-size: 1em;
+  }
+
+  .user-stat-number {
+    font-size: 1.2em;
+  }
+
+  .card-text {
+    padding: 1rem !important;
+  }
+
+  .user-profile-card .card-title {
+    font-size: 1.5em;
+  }
+
+  .add-button-container {
+    margin-top: -30px;
+  }
+
+  .add-button {
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-profile-card {
+    padding-top: 60px;
+  }
+
+  .user-profile-background {
+    background-color: #F9F3EC;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    padding: 20px;
+    font-family: 'Quicksand', sans-serif;
+  }
+  
+  .user-image-container {
+    position: absolute;
+    top: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    border-radius: 50%;
+    padding: 5px;
+  }
+
+  .user-image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .user-stat {
+    font-size: 0.9em;
+  }
+
+  .user-stat-number {
+    font-size: 1em;
+  }
+
+  .card-text {
+    padding: 0.5rem !important;
+  }
+
+  .user-profile-card .card-title {
+    font-size: 1.2em;
+  }
+
+  .edit-button,
+  .message-button {
+    font-size: 1.2em;
+  }
+
+  .notification-badge {
+    font-size: 0.7em;
+  }
+
+  .add-button-container {
+    margin-top: -20px;
+  }
+
+  .add-button {
+    padding: 6px 12px;
+  }
 }
