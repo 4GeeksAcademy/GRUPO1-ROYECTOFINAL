@@ -1,6 +1,7 @@
 import React from 'react';
 import '../../styles/Register.css';
 import registerIMG from  '../../img/register.png'
+import { Link } from 'react-router-dom';
 
 
 export const Register = () => {
@@ -35,7 +36,7 @@ export const Register = () => {
           name="nombre"
           id="nombre"
           required
-          placeholder='Ingrese nombre'
+          placeholder='Ingrese nombre' minLength="4"
         />
 
         <label className='register__label' htmlFor="telefono">TELÉFONO</label>
@@ -81,7 +82,8 @@ export const Register = () => {
         />
 
         <button className='register__button' type='submit'>REGISTRAR</button>
-      </form>
+        <Link to="/" className='register__link-cuenta'>¿tienes una cuenta?</Link>
+      </form>  
     </div>
   );
 };

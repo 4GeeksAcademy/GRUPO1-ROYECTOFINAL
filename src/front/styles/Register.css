@@ -18,7 +18,7 @@
     background-color: #ffffff65;
     color: #41403E;
     box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.178);
-    margin: 20px 40px;
+    margin: 30px 40px;
     z-index: 10;
     position: relative;
   }
@@ -61,7 +61,7 @@
   .register__button:hover {
     background-color: #C74370;
     border: 1px solid #fff;
-    transform: scale(1.2);
+    transform: scale(1.1);
   }
   
   .register__img {
@@ -75,6 +75,13 @@
     height: 700px;
     filter: drop-shadow(-20px 10px 10px rgba(0, 0, 0, 0.397));
     animation: float 3s ease-in-out infinite;
+  }
+
+  .register__link-cuenta{
+    text-align: end;
+    padding: 0;
+    margin-bottom: 0;
+    color: #D95383;
   }
   
   @keyframes float {
@@ -109,7 +116,7 @@
     }
 
     .register__form{
-        margin-top: 50px;
+       padding: 5px 10px;
     }
 
     .register__label{
