@@ -1,0 +1,107 @@
+/* userProfile.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
+
+.user-profile-background {
+  background-color: #F9F3EC;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.user-profile-card {
+  position: relative;
+  background-color: white;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 800px;
+  padding-top: 100px; /* Space for the image */
+  text-align: center;
+  height: 440px;
+  margin-top: 4rem;
+}
+
+.card-text {
+    padding: 2rem!important;
+}
+
+.user-image-container {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.user-image {
+  width: 195px;
+  height: 195px;
+  object-fit: cover;
+}
+
+.user-profile-body {
+  padding-top: 20px;
+}
+
+.user-stats {
+  margin-top: 20px;
+}
+
+.user-stat {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #D95383;
+}
+
+.user-stat-number {
+  font-size: 1.5em;
+  color: #D95383;
+}
+
+.user-profile-body .text-muted {
+  color: #D95383;
+}
+
+.edit-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background-color: transparent;
+  font-size: 1.5em;
+  color: #565656;
+}
+
+.message-button-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.message-button {
+  border: none;
+  background-color: transparent;
+  font-size: 1.5em;
+  color: #565656;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  background-color: #D95383;
+  color: white;
+  border-radius: 50%;
+  padding: 0px 6px;
+  font-size: 0.8em;
+  font-family: 'Kanit', sans-serif;
+}
+.user-profile-card .card-title {
+  font-size: 2em;
+  color: #D95383;
+}
