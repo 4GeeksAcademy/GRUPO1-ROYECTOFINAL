@@ -36,7 +36,7 @@ export const Register = () => {
                 <img className='register__img__portada' src={registerIMG} alt="Imagen de registro" />
             </figure>
             <form className='register__form' onSubmit={handleSubmit}>
-                <h1 className='register__title'>Crea una cuenta</h1>
+                <h1 className='register__title'>REGISTER</h1>
                 <label className='register__label' htmlFor="nombre">NOMBRE DE USUARIO</label>
                 <input
                     className='register__input'
