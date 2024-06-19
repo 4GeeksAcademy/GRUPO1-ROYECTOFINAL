@@ -68,6 +68,7 @@ export const Register = () => {
           name="password_register"
           id="password_register"
           required
+          minLength="6"
           placeholder='Crea una contraseña'
         />
 
@@ -78,11 +79,12 @@ export const Register = () => {
           name="password_register2"
           id="password_register2"
           required
+          minLength="6"
           placeholder='Ingrese contraseña'
         />
 
         <button className='register__button' type='submit'>REGISTRAR</button>
-        <Link to="/" className='register__link-cuenta'>¿tienes una cuenta?</Link>
+        <Link to="/login" className='register__link-cuenta'>¿tienes una cuenta?</Link>
       </form>  
     </div>
   );
