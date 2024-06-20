@@ -6,6 +6,7 @@ import { BackendURL } from "./component/backendURL";
 import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Register } from "./pages/Register";
+import { Login } from "./pages/Login";
 import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
 
@@ -27,6 +28,7 @@ const Layout = () => {
                 <ScrollToTop>
                     <Header />
                     <Routes>
+                        <Route element={<Login></Login>}  path="/login"/>
                         <Route element={<Register />} path="/register" />
                         <Route element={<PostDetails />} path="/post/:postId" />
                         <Route element={<CreatePost />} path="/create-post" />
