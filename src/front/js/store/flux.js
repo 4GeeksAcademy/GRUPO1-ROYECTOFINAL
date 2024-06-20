@@ -1,22 +1,26 @@
 const getState = ({ getStore, getActions, setStore }) => {
+    // Helper function to safely parse JSON from local storage
+    const safeParse = (key, defaultValue) => {
+        const value = localStorage.getItem(key);
+        try {
+            return value ? JSON.parse(value) : defaultValue;
+        } catch (error) {
+            console.error(`Error parsing localStorage key "${key}":`, error);
+            return defaultValue;
+        }
+    };
+
     return {
         store: {
             message: null,
             demo: [
-                {
-                    title: "FIRST",
-                    background: "white",
-                    initial: "white"
-                },
-                {
-                    title: "SECOND",
-                    background: "white",
-                    initial: "white"
-                }
+                { title: "FIRST", background: "white", initial: "white" },
+                { title: "SECOND", background: "white", initial: "white" }
             ],
             token: localStorage.getItem("token") || null,
+            user: safeParse("user", null),
             posts: [],
-            favorites: JSON.parse(localStorage.getItem("favorites")) || [],
+            favorites: safeParse("favorites", []),
             currentPost: null
         },
         actions: {
@@ -34,14 +38,12 @@ const getState = ({ getStore, getActions, setStore }) => {
                 try {
                     const response = await fetch(process.env.BACKEND_URL + "/api/register", {
                         method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
+                        headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(userData)
                     });
                     if (response.ok) {
                         const data = await response.json();
-                        setStore({ token: data.access_token });
+                        setStore({ token: data.access_token, user: data.user });
                         localStorage.setItem("token", data.access_token);
                         localStorage.setItem("user", JSON.stringify(data.user)); // Save user data to local storage
                         return true;
@@ -54,25 +56,49 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
             loginUser: async (credentials) => {
+                const actions = getActions();
                 try {
                     const response = await fetch(process.env.BACKEND_URL + "/api/login", {
                         method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
+                        headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(credentials)
                     });
                     if (response.ok) {
                         const data = await response.json();
-                        setStore({ token: data.access_token });
+                        setStore({ token: data.access_token, user: data.user });
                         localStorage.setItem("token", data.access_token);
+                        localStorage.setItem("user", JSON.stringify(data.user));
+                        await actions.getFavorites();
                         return true;
                     } else {
+                        const errorText = await response.text();
+                        console.error("Error during user login:", errorText);
                         return false;
                     }
                 } catch (error) {
                     console.error("Error during user login", error);
                     return false;
+                }
+            },
+            getUserDetails: async () => {
+                const store = getStore();
+                try {
+                    const response = await fetch(process.env.BACKEND_URL + "/api/protected", {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${store.token}`
+                        }
+                    });
+                    if (response.ok) {
+                        const user = await response.json();
+                        setStore({ user });
+                        localStorage.setItem("user", JSON.stringify(user));
+                    } else {
+                        console.error("Error fetching user details", response.statusText);
+                    }
+                } catch (error) {
+                    console.error("Error fetching user details", error);
                 }
             },
             createPost: async (postData) => {
@@ -186,6 +212,12 @@ const getState = ({ getStore, getActions, setStore }) => {
                 } catch (error) {
                     console.error("Error fetching favorites", error);
                 }
+            },
+            logout: () => {
+                setStore({ token: null, user: null, favorites: [] });
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                localStorage.removeItem("favorites");
             }
         }
     };

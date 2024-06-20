@@ -14,6 +14,10 @@ export const Header = () => {
         }
     }, [store.token]);
 
+    const handleLogout = () => {
+        actions.logout();
+    };
+
     return (
         <>
             <nav className="navbar navbar-light bg-white navbar-container-custom">
@@ -26,37 +30,45 @@ export const Header = () => {
                         Donate, Exchange, and Sell for a Cause
                     </span>
                     <div className="d-flex align-items-center header-functions-container">
-                        <Link to="/profile" className="mr-3">
-                            <FaUser className="header-user-icon" size={24} />
-                        </Link>
-                        <div className="header-favorites-icon-container mr-3">
-                            <Link className="header-favorites-icon" to="/favorites">
-                                <FaHeart size={24} />
-                                <span className="badge">{store.favorites.length}</span>
-                            </Link>
-                            <div className="dropdown-content">
-                                {store.favorites.length > 0 ? (
-                                    store.favorites.map((favorite) => (
-                                        <Link 
-                                            key={favorite.id} 
-                                            to={`/post/${favorite.post.id}`} 
-                                            className="dropdown-item"
-                                        >
-                                            <strong>{favorite.post.title}</strong>
-                                            <p>{favorite.post.subtitle}</p>
-                                        </Link>
-                                    ))
-                                ) : (
-                                    <p className="dropdown-item">Aún no hay favoritos</p>
-                                )}
-                            </div>
-                        </div>
-                        <Link to="/login">
-                            <button className="btn login-button header-login-button">Login</button>
-                        </Link>
-                        <Link to="/register">
-                            <button className="btn login-button header-login-button">Register</button>
-                        </Link>
+                        {store.token ? (
+                            <>
+                                <Link to="/profile" className="mr-3">
+                                    <FaUser className="header-user-icon" size={24} />
+                                </Link>
+                                <div className="header-favorites-icon-container mr-3">
+                                    <Link className="header-favorites-icon" to="/favorites">
+                                        <FaHeart size={24} />
+                                        <span className="badge">{store.favorites.length}</span>
+                                    </Link>
+                                    <div className="dropdown-content">
+                                        {store.favorites.length > 0 ? (
+                                            store.favorites.map((favorite) => (
+                                                <Link 
+                                                    key={favorite.id} 
+                                                    to={`/post/${favorite.post.id}`} 
+                                                    className="dropdown-item"
+                                                >
+                                                    <strong>{favorite.post.title}</strong>
+                                                    <p>{favorite.post.subtitle}</p>
+                                                </Link>
+                                            ))
+                                        ) : (
+                                            <p className="dropdown-item">Aún no hay favoritos</p>
+                                        )}
+                                    </div>
+                                </div>
+                                <button className="btn login-button header-login-button" onClick={handleLogout}>Logout</button>
+                            </>
+                        ) : (
+                            <>
+                                <Link to="/login">
+                                    <button className="btn login-button header-login-button">Login</button>
+                                </Link>
+                                <Link to="/register">
+                                    <button className="btn login-button header-login-button">Register</button>
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </nav>

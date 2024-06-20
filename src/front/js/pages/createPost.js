@@ -26,7 +26,7 @@ export const CreatePost = () => {
             image: formData.imagen,
             description: formData.descripcion,
             category: formData.categoria,
-            type: "Donación"  // asumiendo que esto es un post de donación
+            type: "Donación"  
         });
         if (success) {
             navigate('/user-posts');
