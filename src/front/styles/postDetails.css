@@ -1,0 +1,38 @@
+.post-details-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.post-details-card {
+    width: 75%;
+    margin-top: 0px;
+}
+
+.post-details-card-img {
+    width: 100%;
+    height: auto;
+}
+
+.post-details-card-body {
+    padding: 15px;
+}
+
+.post-details-list {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.post-details-list li {
+    margin-bottom: 10px;
+}
+
+.contact-button {
+    margin-top: 20px;
+    background-color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+}

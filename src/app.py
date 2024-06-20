@@ -1,11 +1,11 @@
 import os
-from flask import Flask, request, jsonify, url_for, send_from_directory, Blueprint
+from flask import Flask, request, jsonify, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from dotenv import load_dotenv
-from api.models import db, User, Post
+from api.models import db, User, Post, Favorite
 from api.utils import APIException, generate_sitemap
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -42,7 +42,7 @@ api = Blueprint('api', __name__)
 def create_hardcoded_data():
     if not User.query.filter_by(email="testuser@example.com").first():
         hashed_password = bcrypt.hashpw("password".encode('utf-8'), bcrypt.gensalt())
-        user = User(first_name="Test", last_name="User", email="testuser@example.com", password=hashed_password.decode('utf-8'))
+        user = User(nombre="Test User", email="testuser@example.com", password=hashed_password.decode('utf-8'))
         db.session.add(user)
         db.session.commit()
         print("Hardcoded user created")
@@ -62,11 +62,11 @@ def sitemap():
 def register():
     email = request.json.get('email')
     password = request.json.get('password')
-    first_name = request.json.get('first_name')
-    last_name = request.json.get('last_name')
+    nombre = request.json.get('nombre')
+    telefono = request.json.get('telefono')
 
-    if not first_name or not last_name or not email or not password:
-        return jsonify({"msg": "Missing first_name, last_name, email or password"}), 400
+    if not nombre or not email or not password:
+        return jsonify({"msg": "Missing nombre, email or password"}), 400
 
     if User.query.filter_by(email=email).first():
         return jsonify({"msg": "User already exists"}), 409
@@ -75,14 +75,14 @@ def register():
     new_user = User(
         email=email, 
         password=hashed_password.decode('utf-8'), 
-        first_name=first_name, 
-        last_name=last_name
+        nombre=nombre,
+        telefono=telefono
     )
     db.session.add(new_user)
     db.session.commit()
 
     access_token = create_access_token(identity=new_user.id)
-    return jsonify(access_token=access_token), 201
+    return jsonify(access_token=access_token, user=new_user.serialize()), 201
 
 @api.route('/login', methods=['POST'])
 def login():
@@ -126,18 +126,67 @@ def create_post():
 
     new_post = Post(
         image=data.get('image'),
-        short_description=data['short_description'],
         description=data['description'],
         title=data['title'],
         subtitle=data.get('subtitle'),
         type=data['type'],
         category=data['category'],
-        price=data['price'],
         user_id=current_user_id
     )
     db.session.add(new_post)
     db.session.commit()
     return jsonify(new_post.serialize()), 201
+
+@api.route('/posts/<int:post_id>', methods=['GET'])
+def get_post(post_id):
+    post = Post.query.get(post_id)
+    if not post:
+        return jsonify({"msg": "Post not found"}), 404
+    return jsonify(post.serialize()), 200
+
+@api.route('/favorites', methods=['POST'])
+@jwt_required()
+def add_favorite():
+    current_user_id = get_jwt_identity()
+    post_id = request.json.get('post_id')
+
+    if not post_id:
+        return jsonify({"msg": "Missing post_id"}), 400
+
+    new_favorite = Favorite(user_id=current_user_id, post_id=post_id)
+    db.session.add(new_favorite)
+    db.session.commit()
+
+    return jsonify(new_favorite.serialize()), 201
+
+@api.route('/favorites', methods=['GET'])
+@jwt_required()
+def get_favorites():
+    current_user_id = get_jwt_identity()
+    favorites = Favorite.query.filter_by(user_id=current_user_id).all()
+    return jsonify([favorite.serialize() for favorite in favorites]), 200
+
+@api.route('/favorites', methods=['GET'])
+@jwt_required()
+def get_user_favorites():
+    current_user_id = get_jwt_identity()
+    favorites = Favorite.query.filter_by(user_id=current_user_id).all()
+    return jsonify([favorite.serialize() for favorite in favorites]), 200
+
+@api.route('/favorites/<int:post_id>', methods=['DELETE'])
+@jwt_required()
+def delete_favorite(post_id):
+    current_user_id = get_jwt_identity()
+    favorite = Favorite.query.filter_by(user_id=current_user_id, post_id=post_id).first()
+
+    if not favorite:
+        return jsonify({"msg": "Favorite not found"}), 404
+
+    db.session.delete(favorite)
+    db.session.commit()
+
+    return jsonify({"msg": "Favorite deleted"}), 200
+
 
 # Registrar el Blueprint
 app.register_blueprint(api, url_prefix='/api')

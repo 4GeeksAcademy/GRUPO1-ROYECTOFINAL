@@ -1,3 +1,23 @@
-/* 
-    General Styles used on every website (Don't Repeat Yourself)
-*/
+.favorite-icon {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #D95383;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.favorite-icon-active {
+    color: #797979;
+}
+
+.user-post-card {
+    position: relative;
+    padding-bottom: 60px; /* espacio para el icono */
+}
+
+.user-post-card:hover .favorite-icon {
+    color: #9c9c9c;
+}
