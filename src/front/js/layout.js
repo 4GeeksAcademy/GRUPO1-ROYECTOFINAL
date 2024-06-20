@@ -11,12 +11,12 @@ import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
 
 import { Header } from "./component/header";
-import Footer  from "./component/footer";
+import Footer from "./component/footer";
 import UserProfile from "./pages/userProfile";
 import CreatePost from "./pages/createPost";
 import PostDetails from "./pages/postDetails";
+import PrivateRoute from "./utils/privateRoute";
 
-//create your first component
 const Layout = () => {
     const basename = process.env.BASENAME || "";
 
@@ -28,12 +28,15 @@ const Layout = () => {
                 <ScrollToTop>
                     <Header />
                     <Routes>
-                        <Route element={<Login></Login>}  path="/login"/>
+                        <Route element={<Login />} path="/login" />
                         <Route element={<Register />} path="/register" />
                         <Route element={<PostDetails />} path="/post/:postId" />
-                        <Route element={<CreatePost />} path="/create-post" />
+
+                        <Route element={<PrivateRoute />}>
+                            <Route element={<CreatePost />} path="/create-post" />
+                            <Route element={<UserProfile />} path="/profile" />
+                        </Route>
                         <Route element={<Home />} path="/" />
-                        <Route element={<UserProfile />} path="/profile" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<h1>Not found!</h1>} />

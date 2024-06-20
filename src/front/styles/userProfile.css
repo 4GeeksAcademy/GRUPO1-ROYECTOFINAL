@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&family=Kanit:wght@400;700&display=swap');
 
 .user-profile-background {
   background-color: #F9F3EC;
@@ -143,6 +143,29 @@
   transform: scale(1.05);
 }
 
+.update-button {
+  background-color: #D95383;
+  color: white;
+  font-family: 'Kanit', sans-serif;
+  border-radius: 20px;
+  border: none;
+  padding: 10px 20px;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.update-button:hover {
+  background-color: #C74370;
+  transform: scale(1.05);
+}
+
+.update-user-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 /* Media queries for responsive design */
 @media (max-width: 968px) {
   .add-button {
@@ -153,7 +176,7 @@
 
 @media (max-width: 768px) {
   .user-profile-card {
-    padding-top: 80px; 
+    padding-top: 80px;
     width: 100%;
   }
 
@@ -201,7 +224,7 @@
     padding: 20px;
     font-family: 'Quicksand', sans-serif;
   }
-  
+
   .user-image-container {
     position: absolute;
     top: -70px;
@@ -249,4 +272,14 @@
   .add-button {
     padding: 6px 12px;
   }
+}
+
+.input-custom {
+  width: 100%;
+  margin-bottom: 10px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.modal-title {
+  font-family: 'Quicksand', sans-serif;
 }

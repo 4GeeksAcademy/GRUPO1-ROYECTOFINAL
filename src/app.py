@@ -107,6 +107,26 @@ def get_all_users():
     users = User.query.all()
     return jsonify([user.serialize() for user in users]), 200
 
+@api.route('/users/<int:user_id>', methods=['PUT'])
+@jwt_required()
+def update_user(user_id):
+    current_user_id = get_jwt_identity()
+    if current_user_id != user_id:
+        return jsonify({"msg": "Unauthorized"}), 403
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
+
+    data = request.get_json()
+    user.nombre = data.get('nombre', user.nombre)
+    user.telefono = data.get('telefono', user.telefono)
+    user.email = data.get('email', user.email)
+
+    db.session.commit()
+
+    return jsonify(user.serialize()), 200
+
 @api.route('/posts', methods=['GET'])
 def get_all_posts():
     posts = Post.query.all()

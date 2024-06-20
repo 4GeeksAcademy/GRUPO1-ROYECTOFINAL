@@ -80,6 +80,31 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return false;
                 }
             },
+            updateUser: async (userData) => {
+                const store = getStore();
+                try {
+                    const response = await fetch(process.env.BACKEND_URL + "/api/user", {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${store.token}`
+                        },
+                        body: JSON.stringify(userData)
+                    });
+                    if (response.ok) {
+                        const updatedUser = await response.json();
+                        setStore({ user: updatedUser });
+                        localStorage.setItem("user", JSON.stringify(updatedUser));
+                        return true;
+                    } else {
+                        console.error("Error updating user details", response.statusText);
+                        return false;
+                    }
+                } catch (error) {
+                    console.error("Error updating user details", error);
+                    return false;
+                }
+            },
             getUserDetails: async () => {
                 const store = getStore();
                 try {
@@ -99,6 +124,19 @@ const getState = ({ getStore, getActions, setStore }) => {
                     }
                 } catch (error) {
                     console.error("Error fetching user details", error);
+                }
+            },
+            getPostsByUser: async (userId) => {
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/posts?userId=${userId}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        setStore({ posts: data });
+                    } else {
+                        console.error("Error fetching user posts", response.statusText);
+                    }
+                } catch (error) {
+                    console.error("Error fetching user posts", error);
                 }
             },
             createPost: async (postData) => {
