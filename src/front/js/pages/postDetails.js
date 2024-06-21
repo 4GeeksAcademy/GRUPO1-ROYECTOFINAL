@@ -25,16 +25,16 @@ const PostDetails = () => {
                     <Col md={6}>
                         <Card.Img variant="top" src={post.image} className="post-details-card-img" />
                     </Col>
-                    <Col md={6}>
+                    <Col md={6} className='details__center'>
                         <Card.Body className="post-details-card-body">
                             <Card.Title>{post.title}</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted">{post.subtitle}</Card.Subtitle>
                             <ul className="post-details-list">
                                 <li>{post.description}</li>
-                                <li><strong>Category:</strong> {post.category}</li>
-                                <li><strong>Type:</strong> {post.type}</li>
+                                <li><strong>Categoria:</strong> {post.category}</li>
+                                <li><strong>GRATIS | </strong> {post.type}</li>
                             </ul>
-                            <Button variant="primary" className="contact-button">Contactar</Button>
+                            <Button className="contact-button">Contactar</Button>
                         </Card.Body>
                     </Col>
                 </Row>

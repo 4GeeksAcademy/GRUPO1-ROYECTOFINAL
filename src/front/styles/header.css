@@ -45,7 +45,7 @@
   font-weight: 700;
   color: rgb(59, 59, 59);
   margin-top: -20px;
-  margin-bottom: 0px;
+  margin-left:30px;
 }
 
 .logo-tag {
@@ -57,6 +57,7 @@
   letter-spacing: 2px;
   font-weight: 200 !important;
   font-size: 19px;
+  margin-left: -20px;
 }
 
 .navbar-container-custom {
@@ -102,6 +103,13 @@
   background-color: #DEAD6F;
   color: white;
   font-family: 'Kanit', sans-serif;
+  border-radius: 10px !important; 
+  transition: all 300ms ease-out;
+}
+
+.login-button:hover{
+  transform: scale(1.1);
+  border: 1px solid #393939
 }
 
 .header-navigation {
@@ -111,15 +119,25 @@
   box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.1);
 }
 
+
 .nav-link-custom {
   color: #393939 !important; 
   margin: 0 15px; 
   font-size: 16px;
   font-family: 'Inter', sans-serif;
+  text-decoration: none !important;
+  text-decoration: none!important;
+  box-sizing: border-box !important;
 }
 
 .nav-link-custom:hover {
-  color: #8B5E3C !important; 
+  color: #DEAD6F !important; 
+  border-top: 1px solid #DEAD6F;
+
+}
+
+.active{
+background-color: red;
 }
 
 @media (max-width: 968px) {
@@ -144,8 +162,10 @@
     color: rgb(59, 59, 59);
     margin-top: -20px;
     margin-bottom: 5px;
+}
 
-  }
+
+
   .nav-link-custom {
     color: #393939 !important;
     margin: 4px 0px;

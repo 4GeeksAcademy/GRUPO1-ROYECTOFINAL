@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Row, Col } from 'react-bootstrap';
-import '../../styles/Register.css';
+import '../../styles/CreatePost.css';
+import imgForm from "../../img/img__form.jpg"
 import { Context } from '../store/appContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -43,11 +44,12 @@ export const CreatePost = () => {
 
     return (
         <div className='register__content__create'>
+            <img className='img__form' src={imgForm}></img>
             <form className='register__form__add__post' onSubmit={handleSubmit}>
-                <h1 className='register__title'>Agregá tu donación</h1>
+                <h1 className='register__title'>Descripción de Donación</h1>
 
                 <Row>
-                    <Col md={6}>
+                    <Col>
                         <label className='register__label' htmlFor="titulo">TÍTULO</label>
                         <input
                             className='register__input'
@@ -68,6 +70,7 @@ export const CreatePost = () => {
                             name="subtitulo"
                             id="subtitulo"
                             required
+                             minLength="4"
                             placeholder='Ingrese el subtítulo'
                             value={formData.subtitulo}
                             onChange={handleInputChange}
@@ -91,13 +94,14 @@ export const CreatePost = () => {
                             name="descripcion"
                             id="descripcion"
                             required
+                             minLength="10"
                             placeholder='Ingrese la descripción'
                             value={formData.descripcion}
                             onChange={handleInputChange}
                         ></textarea>
                     </Col>
 
-                    <Col md={6}>
+                    <Col>
                         <label className='register__label' htmlFor="telefono">TELÉFONO</label>
                         <input
                             className='register__input'
@@ -140,6 +144,9 @@ export const CreatePost = () => {
                             <option value="Electrodomésticos">Electrodomésticos</option>
                             <option value="Muebles">Muebles</option>
                             <option value="Vestimenta">Vestimenta</option>
+                            <option value="Comida">Comida</option>
+                            <option value="Servicios">Servicios</option>
+                            <option value="otros">otros</option>
                         </select>
                     </Col>
                 </Row>

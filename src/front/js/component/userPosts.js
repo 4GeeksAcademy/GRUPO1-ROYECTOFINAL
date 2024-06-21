@@ -34,19 +34,24 @@ const UserPosts = () => {
         <div className="user-posts-main-container">
             <div className="user-posts-container">
                 <h2 className="text-center mb-4">Productos Publicados</h2>
-                <Row>
+                <Row className="articles">
                     {store.posts.length > 0 ? store.posts.map((post, index) => (
                         <Col key={index} md={4}>
                             <Card className="user-post-card" onClick={() => handleCardClick(post.id)}>
                                 <Card.Img variant="top" src={post.image} className="user-post-card-img" />
                                 <Card.Body className="user-post-card-body">
-                                    <Card.Title>{post.title}</Card.Title>
-                                    <Card.Text className="item-card">{post.description}</Card.Text>
-                                    <Card.Text className="item-card"><small className="text-muted">{post.subtitle}</small></Card.Text>
-                                    <FaHeart 
-                                        className={`favorite-icon ${isFavorite(post.id) ? 'favorite-icon-active' : ''}`}
+                                    <section className="parrafos">
+                                        <Card.Title className="item-card2">{post.title}</Card.Title>
+                                        <Card.Text className="item-card">{post.description}</Card.Text>
+                                        <Card.Text className="item-card"><small className="text-muted">{post.subtitle}</small></Card.Text>
+                                    </section>
+
+                                  <section className="heart__icon">
+                                  <FaHeart 
+                                        className={`favorite-icon  ${isFavorite(post.id) ? 'favorite-icon-active' : ''}`}
                                         onClick={(e) => handleFavoriteClick(e, post.id)}
                                     />
+                                  </section>
                                 </Card.Body>
                             </Card>
                         </Col>

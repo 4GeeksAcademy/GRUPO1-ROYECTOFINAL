@@ -79,6 +79,7 @@ export const Register = () => {
                     name="password"
                     id="password"
                     required
+                    minLength="6"
                     placeholder='Ingrese una contraseña'
                     value={formData.password}
                     onChange={handleInputChange}
@@ -86,7 +87,7 @@ export const Register = () => {
                 <div className="button-container">
                     <button className='register__button' type='submit'>REGISTRARSE</button>
                 </div>
-                <Link to="/" className='register__link-cuenta'>¿Ya tienes una cuenta?</Link>
+                <Link to="/login" className='register__link-cuenta'>¿Ya tienes una cuenta?</Link>
             </form>
         </div>
     );
