@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import rigoImageUrl from "../../img/home.jpg";
 import responsive from "../../img/responsive.png"
 import shirt from "../../img/tshirt.png"
 import kitchen from "../../img/kitchen.png"
@@ -75,7 +74,7 @@ export const Home = () => {
 
 					<p className="home__title-presentation parrafo-article"><span className="home__parrafo-presentation">Todo tiene una segunda oportunidad!  </span></p>
 
-					<button className="home__button">Publicar ahora</button>
+					<button className="home__button button-dos">Publicar ahora</button>
 				</article>
 
 				

@@ -21,19 +21,40 @@
   .icons-container {
     display: flex;
     gap: 10px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
   }
   
+
+  
   .footer-image {
-    width: 40px; /* Ajusta el tamaño según sea necesario */
+    width: 40px;
     height: auto;
+    border-radius: 50%;
   }
   
   .footer-button {
     background-color: #D95383;
-    padding: 1rem;
-    border-radius: 20px;
+    padding: 10px;
+    border-radius: 10px;
     color: white;
     border: none;
+    transition: all 300ms ease-out;
+  }
+
+  .footer-button:hover{
+    transform: scale(1.1);
   }
   
   .footer-logo1 {
@@ -41,7 +62,7 @@
     font-family: 'Kanit', sans-serif;
     font-weight: 700;
     color: rgb(59, 59, 59);
-    margin-top: -20px;
+    margin: -20px 0px 0px 20px;
     margin-bottom: 0px;
   }
   
@@ -52,6 +73,12 @@
     color: rgb(59, 59, 59);
     margin-top: -20px;
   }
+
+  .icons{
+    border-radius: 50%;
+ 
+  }
+
   
   /* Media queries for responsive design */
   @media (max-width: 768px) {

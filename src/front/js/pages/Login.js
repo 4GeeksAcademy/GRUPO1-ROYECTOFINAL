@@ -29,7 +29,7 @@ export const Login = () => {
       </figure>
       <form className='login__form' onSubmit={handleSubmit}>
         <h1 className='login__title'>LOGIN</h1>
-        {error && <p className="error-message">{error}</p>}
+        {error && <p className="alert alert-danger">{error}</p>}
         <label className='login__label' htmlFor="email">EMAIL</label>
         <input
           className='login__input'

@@ -26,7 +26,7 @@ export const Header = () => {
                         <h1 className="logo">SECOND</h1>
                         <h1 className="logo1">CHANCES</h1>
                     </Link>
-                    <span className="header-slogan" style={{ color: "#DEAD6F", fontWeight: "bold" }}>
+                    <span className="header-slogan" style={{ color: "#D95383", fontWeight: "bold" }}>
                         Donate, Exchange, and Sell for a Cause
                     </span>
                     <div className="d-flex align-items-center header-functions-container">

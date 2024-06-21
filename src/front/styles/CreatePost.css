@@ -1,0 +1,109 @@
+
+.register__content__create {
+    display: flex;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 100px auto;
+    padding: 20px;
+}
+
+
+
+.img__form{
+    max-width: 400px;
+    margin-right: 10px;
+    border-radius: 10px;
+    opacity: 0.8;
+}
+
+
+
+.register__form__add__post {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+}
+
+.register__title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+.register__label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.register__input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.register__input[type="textarea"] {
+    height: 100px;
+    resize: vertical;
+}
+
+.register__button {
+    width: 100%;
+    padding: 10px;
+    background-color: #D95383;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 300ms ease-out;
+}
+
+.register__button:hover {
+    transform: scale(1.1)
+}
+
+.container-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+@media (max-width: 980px) {
+
+    .img__form{
+        display: none;
+    }
+    .register__content__create{
+        max-height: 700px;
+        margin: 60px auto;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .register__content__create {
+        margin: 0 auto;
+    }
+
+    .register__input{
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+
+    .register__title {
+        font-size: 20px;
+    }
+    
+    .register__button{
+        margin-top:10px
+    }
+}
