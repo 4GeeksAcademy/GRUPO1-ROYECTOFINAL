@@ -5,10 +5,12 @@ import '../../styles/userProfile.css';
 import UserPosts from '../component/userPosts';
 import { Link } from 'react-router-dom';
 import { Context } from '../store/appContext';
+import Requests from '../component/request';
 
 const UserProfile = () => {
     const { store, actions } = useContext(Context);
     const [showModal, setShowModal] = useState(false);
+    const [showRequestsModal, setShowRequestsModal] = useState(false);
     const [userData, setUserData] = useState({
         nombre: store.user?.nombre || '',
         telefono: store.user?.telefono || '',
@@ -23,6 +25,9 @@ const UserProfile = () => {
 
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
+
+    const handleRequestsShow = () => setShowRequestsModal(true);
+    const handleRequestsClose = () => setShowRequestsModal(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -53,8 +58,8 @@ const UserProfile = () => {
                         <Button className="edit-button" variant="light" onClick={handleShow}><FaPencilAlt /></Button>
                     </div>
                     <div className="message-button-container">
-                        <Button className="message-button" variant="light"><FaEnvelope /></Button>
-                        <span className="notification-badge">1</span>
+                        <Button className="message-button" variant="light" onClick={handleRequestsShow}><FaEnvelope /></Button>
+                        <span className="notification-badge">{store.requests.length}</span>
                     </div>
                     <Card.Body className="user-profile-body">
                         <Card.Title className="text-center">{store.user?.nombre || 'Nombre del Usuario'}</Card.Title>
@@ -69,7 +74,7 @@ const UserProfile = () => {
                                 FAVORITOS
                             </Col>
                             <Col className="user-stat">
-                                <div className="user-stat-number">0</div>
+                                <div className="user-stat-number">{store.requests.length}</div>
                                 SOLICITUDES
                             </Col>
                         </Row>
@@ -122,6 +127,8 @@ const UserProfile = () => {
                     </Form>
                 </Modal.Body>
             </Modal>
+
+            <Requests show={showRequestsModal} handleClose={handleRequestsClose} />
         </>
     );
 };

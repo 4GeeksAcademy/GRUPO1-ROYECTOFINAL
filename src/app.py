@@ -5,16 +5,21 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from dotenv import load_dotenv
-from api.models import db, User, Post, Favorite
+from api.models import db, User, Post, Favorite, ContactRequest
 from api.utils import APIException, generate_sitemap
 from api.admin import setup_admin
 from api.commands import setup_commands
 import bcrypt
+from datetime import datetime
 
 # Cargar variables de entorno
 load_dotenv()
 
 app = Flask(__name__)
+
+# Configuración de CORS para permitir solicitudes desde tu frontend
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 app.url_map.strict_slashes = False
 
 # Configuración de la base de datos
@@ -30,7 +35,6 @@ app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY", "super-secret-key")
 
 db.init_app(app)
 Migrate(app, db)
-CORS(app)
 JWTManager(app)
 setup_admin(app)
 setup_commands(app)
@@ -66,7 +70,7 @@ def register():
     telefono = request.json.get('telefono')
 
     if not nombre or not email or not password:
-        return jsonify({"msg": "Missing nombre, email or password"}), 400
+        return jsonify({"msg": "Missing nombre, email, or password"}), 400
 
     if User.query.filter_by(email=email).first():
         return jsonify({"msg": "User already exists"}), 409
@@ -91,7 +95,7 @@ def login():
     user = User.query.filter_by(email=email).first()
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
         access_token = create_access_token(identity=user.id)
-        return jsonify(access_token=access_token, user=user.serialize()), 200  # Incluye los detalles del usuario aquí
+        return jsonify(access_token=access_token, user=user.serialize()), 200
     else:
         return jsonify({"msg": "Bad email or password"}), 401
 
@@ -128,7 +132,9 @@ def update_user(user_id):
     return jsonify(user.serialize()), 200
 
 @api.route('/posts', methods=['GET'])
+@jwt_required()
 def get_all_posts():
+    user_id = get_jwt_identity()
     posts = Post.query.all()
     return jsonify([post.serialize() for post in posts]), 200
 
@@ -179,16 +185,57 @@ def add_favorite():
 
     return jsonify(new_favorite.serialize()), 201
 
-@api.route('/favorites', methods=['GET'])
+@api.route('/all-posts', methods=['GET'])
+def get_all_posts_unrestricted():
+    posts = Post.query.all()
+    return jsonify([post.serialize() for post in posts]), 200
+
+@api.route('/posts/<int:post_id>', methods=['PUT'])
 @jwt_required()
-def get_favorites():
+def update_post(post_id):
     current_user_id = get_jwt_identity()
-    favorites = Favorite.query.filter_by(user_id=current_user_id).all()
-    return jsonify([favorite.serialize() for favorite in favorites]), 200
+    post = Post.query.get(post_id)
+
+    if not post:
+        return jsonify({"msg": "Post not found"}), 404
+
+    if post.user_id != current_user_id:
+        return jsonify({"msg": "Unauthorized"}), 403
+
+    data = request.get_json()
+    post.image = data.get('image', post.image)
+    post.description = data.get('description', post.description)
+    post.title = data.get('title', post.title)
+    post.subtitle = data.get('subtitle', post.subtitle)
+    post.type = data.get('type', post.type)
+    post.category = data.get('category', post.category)
+
+    db.session.commit()
+    return jsonify(post.serialize()), 200
+
+@api.route('/posts/<int:post_id>', methods=['DELETE'])
+@jwt_required()
+def delete_post(post_id):
+    current_user_id = get_jwt_identity()
+    post = Post.query.get(post_id)
+
+    if not post:
+        return jsonify({"msg": "Post not found"}), 404
+
+    if post.user_id != current_user_id:
+        return jsonify({"msg": "Unauthorized"}), 403
+
+    try:
+        db.session.delete(post)
+        db.session.commit()
+        return jsonify({"msg": "Post deleted"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"msg": "Error deleting post", "error": str(e)}), 500
 
 @api.route('/favorites', methods=['GET'])
 @jwt_required()
-def get_user_favorites():
+def get_favorites():
     current_user_id = get_jwt_identity()
     favorites = Favorite.query.filter_by(user_id=current_user_id).all()
     return jsonify([favorite.serialize() for favorite in favorites]), 200
@@ -207,6 +254,51 @@ def delete_favorite(post_id):
 
     return jsonify({"msg": "Favorite deleted"}), 200
 
+@api.route('/contact-requests', methods=['POST'])
+@jwt_required()
+def create_contact_request():
+    current_user_id = get_jwt_identity()
+    data = request.get_json()
+    post_id = data.get('post_id')
+
+    if not post_id:
+        return jsonify({"msg": "Missing post_id"}), 400
+
+    post = Post.query.get(post_id)
+    if not post:
+        return jsonify({"msg": "Post not found"}), 404
+
+    if post.user_id == current_user_id:
+        return jsonify({"msg": "Cannot request contact for your own post"}), 400
+
+    existing_request = ContactRequest.query.filter_by(sender_id=current_user_id, post_id=post_id).first()
+    if existing_request:
+        return jsonify({"msg": "Contact request already sent"}), 400
+
+    new_request = ContactRequest(
+        sender_id=current_user_id,
+        receiver_id=post.user_id,
+        post_id=post_id,
+        message=data.get('message', '')
+    )
+    db.session.add(new_request)
+    db.session.commit()
+
+    return jsonify(new_request.serialize()), 201
+
+@api.route('/contact-requests', methods=['GET'])
+@jwt_required()
+def get_contact_requests():
+    current_user_id = get_jwt_identity()
+    requests = ContactRequest.query.filter_by(receiver_id=current_user_id).all()
+    return jsonify([request.serialize() for request in requests]), 200
+
+@api.route('/contact-requests/sent', methods=['GET'])
+@jwt_required()
+def get_sent_contact_requests():
+    current_user_id = get_jwt_identity()
+    requests = ContactRequest.query.filter_by(sender_id=current_user_id).all()
+    return jsonify([request.serialize() for request in requests]), 200
 
 # Registrar el Blueprint
 app.register_blueprint(api, url_prefix='/api')

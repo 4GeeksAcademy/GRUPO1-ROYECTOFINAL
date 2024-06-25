@@ -1,11 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Spinner } from 'react-bootstrap';
 import '../../styles/CreatePost.css';
-import imgForm from "../../img/img__form.jpg"
+import imgForm from "../../img/img__form.jpg";
 import { Context } from '../store/appContext';
 import { useNavigate, useParams } from 'react-router-dom';
 
-export const CreatePost = () => {
+const EditPost = () => {
     const { store, actions } = useContext(Context);
     const navigate = useNavigate();
     const { postId } = useParams();
@@ -19,42 +19,40 @@ export const CreatePost = () => {
         ubicacion: '',
         categoria: ''
     });
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (postId) {
-            const fetchPost = async () => {
-                const post = await actions.getPost(postId);
-                if (post) {
-                    setFormData({
-                        titulo: post.title,
-                        subtitulo: post.subtitle,
-                        imagen: post.image,
-                        descripcion: post.description,
-                        telefono: post.telefono,
-                        email: post.email,
-                        ubicacion: post.ubicacion,
-                        categoria: post.category
-                    });
-                }
-            };
-            fetchPost();
-        }
+        const fetchPost = async () => {
+            const post = await actions.getPost(postId);
+            if (post) {
+                setFormData({
+                    titulo: post.title,
+                    subtitulo: post.subtitle,
+                    imagen: post.image,
+                    descripcion: post.description,
+                    telefono: store.user.telefono,
+                    email: store.user.email,
+                    ubicacion: '', // Agrega la lógica para ubicación si es necesario
+                    categoria: post.category
+                });
+                setLoading(false);
+            }
+        };
+        fetchPost();
     }, [postId]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const postData = {
+        const success = await actions.updatePost(postId, {
             title: formData.titulo,
             subtitle: formData.subtitulo,
             image: formData.imagen,
             description: formData.descripcion,
             category: formData.categoria,
             type: "Donación"
-        };
-
-        const success = postId ? await actions.updatePost(postId, postData) : await actions.createPost(postData);
+        });
         if (success) {
-            navigate('/profile');
+            navigate('/user-posts');
         }
     };
 
@@ -66,11 +64,21 @@ export const CreatePost = () => {
         });
     };
 
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{ height: '90vh' }}>
+                <Spinner animation="border" role="status" className="spinner">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </div>
+        );
+    }
+
     return (
         <div className='register__content__create'>
-            <img className='img__form' src={imgForm}></img>
+            <img className='img__form' src={imgForm} alt="form background" />
             <form className='register__form__add__post' onSubmit={handleSubmit}>
-                <h1 className='register__title'>Descripción de Donación</h1>
+                <h1 className='register__title'>Editar Donación</h1>
 
                 <Row>
                     <Col>
@@ -176,11 +184,11 @@ export const CreatePost = () => {
                 </Row>
 
                 <div className="container-button">
-                    <button className='register__button' type='submit'>{postId ? 'ACTUALIZAR' : 'CREAR'}</button>
+                    <button className='register__button' type='submit'>GUARDAR CAMBIOS</button>
                 </div>
             </form>
         </div>
     );
 };
 
-export default CreatePost;
+export default EditPost;

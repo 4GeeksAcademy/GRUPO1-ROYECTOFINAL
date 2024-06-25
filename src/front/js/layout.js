@@ -14,6 +14,7 @@ import { Header } from "./component/header";
 import Footer from "./component/footer";
 import UserProfile from "./pages/userProfile";
 import CreatePost from "./pages/createPost";
+import EditPost from "./pages/editPost";  // Asegúrate de tener esta página
 import PostDetails from "./pages/postDetails";
 import PrivateRoute from "./utils/privateRoute";
 
@@ -34,6 +35,7 @@ const Layout = () => {
 
                         <Route element={<PrivateRoute />}>
                             <Route element={<CreatePost />} path="/create-post" />
+                            <Route element={<EditPost />} path="/edit-post/:postId" />  // Agregar ruta para editar post
                             <Route element={<UserProfile />} path="/profile" />
                         </Route>
                         <Route element={<Home />} path="/" />

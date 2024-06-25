@@ -1,37 +1,25 @@
-import React, { useContext, useEffect } from "react";
-import { Card, Col, Row } from "react-bootstrap";
-import { FaHeart, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import React, { useContext, useEffect, useState } from "react";
+import { Card, Col, Row, Spinner } from "react-bootstrap";
+import { FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "../../styles/userPosts.css";
 import { Context } from "../store/appContext";
 
-const UserPosts = () => {
+const AllPosts = () => {
     const { store, actions } = useContext(Context);
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (store.user) {
-            actions.getPostsByUser();
-        }
-    }, [store.user]);
+        const fetchPosts = async () => {
+            await actions.getAllPostsUnrestricted();
+            setLoading(false);
+        };
+        fetchPosts();
+    }, []);
 
     const handleCardClick = (postId) => {
         navigate(`/post/${postId}`);
-    };
-
-    const handleEditClick = (e, post) => {
-        e.stopPropagation();
-        actions.setCurrentPost(post);
-        navigate(`/edit-post/${post.id}`);
-    };
-
-    const handleDeleteClick = async (e, postId) => {
-        e.stopPropagation();
-        const confirmDelete = window.confirm("¿Estás segurx que deseas eliminar el Post?");
-        if (confirmDelete) {
-            await actions.deletePost(postId);
-            actions.getPostsByUser(); // Volver a cargar los posts después de eliminar
-        }
     };
 
     const handleFavoriteClick = (e, postId) => {
@@ -47,24 +35,24 @@ const UserPosts = () => {
         return store.favorites.some(fav => fav.post.id === postId);
     };
 
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{ height: '90vh' }}>
+                <Spinner animation="border" role="status" className="spinner">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </div>
+        );
+    }
+
     return (
         <div className="user-posts-main-container">
             <div className="user-posts-container">
-                <h2 className="text-center mb-4 title-posts">Tus Publicaciones</h2>
+                <h2 className="text-center mb-4 title-posts">Encuentra lo que necesitas</h2>
                 <Row className="articles">
                     {store.posts.length > 0 ? store.posts.map((post, index) => (
                         <Col key={index} md={4}>
                             <Card className="user-post-card" onClick={() => handleCardClick(post.id)}>
-                                <div className="card-icons">
-                                    <FaPencilAlt
-                                        className="edit-icon"
-                                        onClick={(e) => handleEditClick(e, post)}
-                                    />
-                                    <FaTrashAlt
-                                        className="delete-icon"
-                                        onClick={(e) => handleDeleteClick(e, post.id)}
-                                    />
-                                </div>
                                 <Card.Img variant="top" src={post.image} className="user-post-card-img" />
                                 <Card.Body className="user-post-card-body">
                                     <section className="parrafos">
@@ -90,4 +78,4 @@ const UserPosts = () => {
     );
 };
 
-export default UserPosts;
+export default AllPosts;

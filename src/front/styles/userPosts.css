@@ -8,8 +8,9 @@
 
 .user-posts-main-container {
   background-color: #F9F3EC;
-  margin-top: -40px;
+  margin-top: 40px;
   padding-bottom: 40px;
+  margin-bottom: 40px;
 }
 
 
@@ -19,14 +20,14 @@
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
-  max-height: 335px; 
+  max-height: 520px;
   cursor: pointer;
 }
 
 .user-post-card-img {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  height: 200px; 
+  height: 395px;
   object-fit: cover;
   padding: 5px 5px;
 }
@@ -38,18 +39,19 @@
   text-align: center;
 }
 
-.item-card2{
+.item-card2 {
   text-align: start;
   font-size: 1.5rem;
   font-weight: 700;
 }
+
 .item-card {
   padding: 0 !important;
   text-align: start !important;
 }
 
 .favorite-icon {
-  color: #D95383;
+  color: #D95383 !important;
   font-size: 1.5rem;
   cursor: pointer;
   transition: color 0.3s ease;
@@ -72,7 +74,7 @@
   }
 
   .user-post-card {
-    height: auto; 
+    height: auto;
   }
 
   .user-post-card-body {
@@ -80,9 +82,9 @@
   }
 
   .user-post-card-img {
-    height: 150px; 
+    height: 365px;
   }
-  
+
   .register__content__create {
     display: flex;
     justify-content: center;
@@ -117,4 +119,47 @@
     flex: 0 0 100%;
     max-width: 100%;
   }
+}
+
+.user-post-card {
+  position: relative;
+}
+
+.card-icons {
+  position: absolute;
+  top: 17px;
+  font-size: 22px;
+  right: 15px;
+  display: flex;
+  gap: 16px;
+}
+
+.title-posts {
+  font-size: 45px !important;
+  margin-bottom: 4rem !important;
+}
+
+
+.delete-icon {
+  cursor: pointer;
+  color: #D95383;
+  transition: color 0.2s;
+}
+
+.edit-icon {
+  color: #086dd8;
+}
+
+.edit-icon:hover,
+.delete-icon:hover {
+  color: #0056b3;
+}
+
+.favorite-icon {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.favorite-icon-active {
+  color: red;
 }

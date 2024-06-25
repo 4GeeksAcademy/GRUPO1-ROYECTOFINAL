@@ -8,6 +8,7 @@
   height: 100vh;
   padding: 20px;
   font-family: 'Quicksand', sans-serif;
+  margin-bottom: -150px;
 }
 
 .button-container-create {
@@ -17,18 +18,19 @@
 
 .user-profile-card {
   position: relative;
-  background-color: white;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 800px;
-  padding-top: 100px;
-  text-align: center;
-  height: auto;
-  margin-top: 4rem;
+    background-color: white;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 800px;
+    padding-top: 100px;
+    padding-bottom: 30px;
+    text-align: center;
+    height: auto;
+    margin-top: -2rem;
 }
 
 .card-text {
-  padding: 2rem !important;
+  padding: 0rem !important;
 }
 
 .user-image-container {
@@ -53,6 +55,7 @@
 
 .user-stats {
   margin-top: 20px;
+  margin-bottom: 30px;
 }
 
 .user-stat {
@@ -160,10 +163,15 @@
   transform: scale(1.05);
 }
 
-.update-user-form {
+.update-user-form,
+.send-message-form {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.modal-title {
+  font-family: 'Quicksand', sans-serif;
 }
 
 /* Media queries for responsive design */
@@ -272,6 +280,29 @@
   .add-button {
     padding: 6px 12px;
   }
+}
+
+.input-custom {
+  width: 100%;
+  margin-bottom: 10px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.update-button {
+  background-color: #D95383;
+  color: white;
+  font-family: 'Kanit', sans-serif;
+  border-radius: 20px;
+  border: none;
+  padding: 10px 20px;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.update-button:hover {
+  background-color: #C74370;
+  transform: scale(1.05);
 }
 
 .input-custom {

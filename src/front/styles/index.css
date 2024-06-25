@@ -1,5 +1,8 @@
-body{
+body {
     background-color: #F9F3EC;
 }
 
-
+.spinner {
+    width: 70px !important;
+    height: 70px !important;
+}
