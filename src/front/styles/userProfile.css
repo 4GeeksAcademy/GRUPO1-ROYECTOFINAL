@@ -104,16 +104,29 @@
   background-color: transparent;
   font-size: 1.5em;
   color: #565656;
+  cursor: pointer;
+  margin-top: 7px !important;
 }
 
 .notification-badge {
   position: absolute;
-  top: 4px;
+  top: 9px;
   right: 5px;
   background-color: #D95383;
   color: white;
   border-radius: 50%;
   padding: 0px 6px;
+  font-size: 0.8em;
+  font-family: 'Kanit', sans-serif;
+}
+.notification-badge-header {
+  position: absolute;
+  top: -7px;
+  right: -9px;
+  background-color: #D95383;
+  color: white;
+  border-radius: 50%;
+  padding: 0px 7px;
   font-size: 0.8em;
   font-family: 'Kanit', sans-serif;
 }

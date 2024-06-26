@@ -40,24 +40,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 
             registerUser: async (userData) => {
                 try {
-                    const response = await fetch(process.env.BACKEND_URL + "/api/register", {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/register`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(userData)
                     });
                     if (response.ok) {
                         const data = await response.json();
-                        setStore({ token: data.access_token, user: data.user });
-                        localStorage.setItem("token", data.access_token);
-                        localStorage.setItem("user", JSON.stringify(data.user));
-                        return true;
+                        return data;
                     } else {
                         console.error("Error during user registration:", await response.text());
-                        return false;
+                        return null;
                     }
                 } catch (error) {
                     console.error("Error during user registration:", error);
-                    return false;
+                    return null;
                 }
             },
 
@@ -86,29 +83,34 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
-            updateUser: async (userData) => {
+            updateUser: async (userData, imageFile) => {
                 const store = getStore();
+            
+                const formData = new FormData();
+                formData.append('nombre', userData.nombre);
+                formData.append('telefono', userData.telefono);
+                formData.append('email', userData.email);
+                if (imageFile) {
+                    formData.append('image', imageFile);
+                }
+            
+                const options = {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `Bearer ${store.token}`,
+                    },
+                    body: formData,
+                };
+            
                 try {
-                    const response = await fetch(process.env.BACKEND_URL + "/api/users/" + store.user.id, {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${store.token}`
-                        },
-                        body: JSON.stringify(userData)
-                    });
-                    const checkedResponse = await getActions().checkTokenExpiration(response);
-                    if (checkedResponse.ok) {
-                        const updatedUser = await checkedResponse.json();
-                        setStore({ user: updatedUser });
-                        localStorage.setItem("user", JSON.stringify(updatedUser));
-                        return true;
-                    } else {
-                        console.error("Error updating user details:", await checkedResponse.text());
-                        return false;
-                    }
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/users/${store.user.id}`, options);
+                    if (!response.ok) throw new Error('Error updating user');
+            
+                    const updatedUser = await response.json();
+                    setStore({ user: updatedUser });
+                    return true;
                 } catch (error) {
-                    console.error("Error updating user details:", error);
+                    console.error('Error updating user:', error);
                     return false;
                 }
             },

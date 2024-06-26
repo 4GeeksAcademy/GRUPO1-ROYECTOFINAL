@@ -6,6 +6,7 @@ import UserPosts from '../component/userPosts';
 import { Link } from 'react-router-dom';
 import { Context } from '../store/appContext';
 import Requests from '../component/request';
+import { Tooltip } from 'react-tooltip';
 
 const UserProfile = () => {
     const { store, actions } = useContext(Context);
@@ -16,6 +17,7 @@ const UserProfile = () => {
         telefono: store.user?.telefono || '',
         email: store.user?.email || ''
     });
+    const [imageFile, setImageFile] = useState(null);
 
     useEffect(() => {
         if (store.token && store.user) {
@@ -34,9 +36,13 @@ const UserProfile = () => {
         setUserData({ ...userData, [name]: value });
     };
 
+    const handleImageChange = (e) => {
+        setImageFile(e.target.files[0]);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await actions.updateUser(userData);
+        const success = await actions.updateUser(userData, imageFile);
         if (success) {
             handleClose();
         }
@@ -49,17 +55,23 @@ const UserProfile = () => {
             <div className="user-profile-background">
                 <Card className="user-profile-card">
                     <div className="user-image-container">
-                        <Image src="https://res.cloudinary.com/djpifu0cl/image/upload/v1718598453/4geeks_cm8jnn.webp" roundedCircle className="user-image" />
+                        <Image src={store.user?.image_url || "https://res.cloudinary.com/djpifu0cl/image/upload/v1718598453/4geeks_cm8jnn.webp"} roundedCircle className="user-image" />
                     </div>
                     <div className="button-container-create">
                         <Link to="/create-post">
                             <Button className="add-button">Agregar Donación</Button>
                         </Link>
-                        <Button className="edit-button" variant="light" onClick={handleShow}><FaPencilAlt /></Button>
+                        <Button className="edit-button" variant="light" onClick={handleShow} data-tooltip-id="editTooltip" data-tooltip-content="Editar tu información">
+                            <FaPencilAlt />
+                        </Button>
+                        <Tooltip id="editTooltip" place="bottom" effect="solid" className="custom-tooltip" />
                     </div>
                     <div className="message-button-container">
-                        <Button className="message-button" variant="light" onClick={handleRequestsShow}><FaEnvelope /></Button>
+                        <Button className="message-button" variant="light" onClick={handleRequestsShow} data-tooltip-id="requestsTooltip" data-tooltip-content="Tus Solicitudes">
+                            <FaEnvelope />
+                        </Button>
                         <span className="notification-badge">{store.requests.length}</span>
+                        <Tooltip id="requestsTooltip" place="bottom" effect="solid" className="custom-tooltip" />
                     </div>
                     <Card.Body className="user-profile-body">
                         <Card.Title className="text-center">{store.user?.nombre || 'Nombre del Usuario'}</Card.Title>
@@ -119,6 +131,14 @@ const UserProfile = () => {
                                 value={userData.email}
                                 onChange={handleChange}
                                 required
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formImage" className="input-custom">
+                            <Form.Label>Imagen de Perfil</Form.Label>
+                            <Form.Control
+                                type="file"
+                                name="image"
+                                onChange={handleImageChange}
                             />
                         </Form.Group>
                         <Button variant="primary" type="submit" className="mt-3 update-button">

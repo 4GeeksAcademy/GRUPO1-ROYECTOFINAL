@@ -12,6 +12,7 @@ export const Register = () => {
         telefono: '',
         email: '',
         password: '',
+        image: null
     });
 
     const handleSubmit = async (e) => {
@@ -28,6 +29,18 @@ export const Register = () => {
             ...formData,
             [name]: name === 'telefono' ? value.replace(/\D/g, '').slice(0, 11) : value,
         });
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setFormData({
+                ...formData,
+                image: reader.result
+            });
+        };
+        reader.readAsDataURL(file);
     };
 
     return (
@@ -83,6 +96,15 @@ export const Register = () => {
                     placeholder='Ingrese una contraseña'
                     value={formData.password}
                     onChange={handleInputChange}
+                />
+                <label className='register__label' htmlFor="image">IMAGEN DE PERFIL</label>
+                <input
+                    className='register__input'
+                    type="file"
+                    name="image"
+                    id="image"
+                    accept="image/*"
+                    onChange={handleImageChange}
                 />
                 <div className="button-container">
                     <button className='register__button' type='submit'>REGISTRARSE</button>

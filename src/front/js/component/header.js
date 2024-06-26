@@ -1,22 +1,29 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaUser, FaHeart } from "react-icons/fa";
+import { FaUser, FaHeart, FaEnvelope } from "react-icons/fa";
 import HeaderNavigation from "./headerNavigation";
 import "../../styles/header.css";
 import { Context } from "../store/appContext";
+import RequestsModal from "../component/requestModal"; // Asegúrate de importar el modal de requests
+import { Tooltip } from "react-tooltip"; // Importar Tooltip
 
 export const Header = () => {
     const { store, actions } = useContext(Context);
+    const [showRequestsModal, setShowRequestsModal] = useState(false);
 
     useEffect(() => {
         if (store.token) {
             actions.getFavorites();
+            actions.getRequests(); // Obtener las solicitudes de contacto
         }
     }, [store.token]);
 
     const handleLogout = () => {
         actions.logout();
     };
+
+    const handleRequestsShow = () => setShowRequestsModal(true);
+    const handleRequestsClose = () => setShowRequestsModal(false);
 
     return (
         <>
@@ -32,13 +39,21 @@ export const Header = () => {
                     <div className="d-flex align-items-center header-functions-container">
                         {store.token ? (
                             <>
-                                <Link to="/profile" className="mr-3">
+                                <Link to="/profile" className="mr-3" data-tooltip-id="profileTooltip" data-tooltip-content="Tú Perfil">
                                     <FaUser className="header-user-icon" size={24} />
                                 </Link>
+                                <Tooltip id="profileTooltip" place="bottom" effect="solid" className="custom-tooltip" />
+                                <div className="header-requests-icon-container mr-3 position-relative" data-tooltip-id="requestsTooltip" data-tooltip-content="Solicitudes">
+                                    <FaEnvelope className="message-button" size={24} onClick={handleRequestsShow} />
+                                    <span className="notification-badge-header">{store.requests.length}</span>
+                                </div>
+                                <Tooltip id="requestsTooltip" place="bottom" effect="solid" className="custom-tooltip" />
                                 <div className="header-favorites-icon-container mr-3">
                                     <Link className="header-favorites-icon" to="/favorites">
-                                        <FaHeart size={24} />
-                                        <span className="badge">{store.favorites.length}</span>
+                                        <div className="position-relative">
+                                            <FaHeart size={24} />
+                                            <span className="badge">{store.favorites.length}</span>
+                                        </div>  
                                     </Link>
                                     <div className="dropdown-content">
                                         {store.favorites.length > 0 ? (
@@ -73,6 +88,7 @@ export const Header = () => {
                 </div>
             </nav>
             <HeaderNavigation />
+            <RequestsModal show={showRequestsModal} handleClose={handleRequestsClose} />
         </>
     );
 };

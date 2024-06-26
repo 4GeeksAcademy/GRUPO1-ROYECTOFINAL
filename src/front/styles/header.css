@@ -1,6 +1,10 @@
+/* header.css */
+
 .header-user-icon {
   color: #41403E;
   font-size: 25px;
+  position: relative;
+  cursor: pointer;
 }
 
 .header-favorites-icon-container {
@@ -107,9 +111,9 @@
   transition: all 300ms ease-out;
 }
 
-.login-button:hover{
+.login-button:hover {
   transform: scale(1.1);
-  border: 1px solid #393939
+  border: 1px solid #393939;
 }
 
 .header-navigation {
@@ -118,7 +122,6 @@
   width: 100%;
   box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.1);
 }
-
 
 .nav-link-custom {
   color: #393939 !important; 
@@ -133,11 +136,10 @@
 .nav-link-custom:hover {
   color: #DEAD6F !important; 
   border-top: 1px solid #DEAD6F;
-
 }
 
-.active{
-background-color: red;
+.active {
+  background-color: red;
 }
 
 @media (max-width: 968px) {
@@ -162,9 +164,7 @@ background-color: red;
     color: rgb(59, 59, 59);
     margin-top: -20px;
     margin-bottom: 5px;
-}
-
-
+  }
 
   .nav-link-custom {
     color: #393939 !important;
@@ -172,4 +172,16 @@ background-color: red;
     font-size: 14px;
     font-family: 'Inter', sans-serif;
   }
+}
+
+/* Custom tooltip styling */
+.custom-tooltip {
+  width: auto; /* Ajustar el tamaño según sea necesario */
+  font-size: 3px; /* Hacer el texto más pequeño */
+  text-align: center; /* Centrar el texto */
+  padding: 4px 3px;
+  background-color: #D95383; /* Color de fondo del tooltip */
+  color: white; /* Color del texto del tooltip */
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

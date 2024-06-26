@@ -11,6 +11,15 @@ from api.admin import setup_admin
 from api.commands import setup_commands
 import bcrypt
 from datetime import datetime
+import cloudinary
+import cloudinary.uploader
+
+# Configuración de Cloudinary
+cloudinary.config(
+    cloud_name = 'djpifu0cl', 
+    api_key = '728872235866552',
+    api_secret = '-ZWCi3RFfneVx4FS4L1jp8sKyOE'
+)
 
 # Cargar variables de entorno
 load_dotenv()
@@ -61,32 +70,60 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-# Rutas 
+ 
+# Ruta para subir imagen
+@api.route('/upload', methods=['POST'])
+def upload_image():
+    file_to_upload = request.files['file']
+    if file_to_upload:
+        upload_result = cloudinary.uploader.upload(file_to_upload)
+        return jsonify(upload_result), 200
+    return jsonify({"msg": "No file uploaded"}), 400
+
+# Rutas
+
+# En la ruta de registro
 @api.route('/register', methods=['POST'])
 def register():
-    email = request.json.get('email')
-    password = request.json.get('password')
-    nombre = request.json.get('nombre')
-    telefono = request.json.get('telefono')
+    try:
+        email = request.json.get('email')
+        password = request.json.get('password')
+        nombre = request.json.get('nombre')
+        telefono = request.json.get('telefono')
+        image_data = request.json.get('image')
 
-    if not nombre or not email or not password:
-        return jsonify({"msg": "Missing nombre, email, or password"}), 400
+        if not nombre or not email or not password:
+            return jsonify({"msg": "Missing nombre, email, or password"}), 400
 
-    if User.query.filter_by(email=email).first():
-        return jsonify({"msg": "User already exists"}), 409
+        if User.query.filter_by(email=email).first():
+            return jsonify({"msg": "User already exists"}), 409
 
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    new_user = User(
-        email=email, 
-        password=hashed_password.decode('utf-8'), 
-        nombre=nombre,
-        telefono=telefono
-    )
-    db.session.add(new_user)
-    db.session.commit()
+        # Subir la imagen a Cloudinary
+        image_url = None
+        if image_data:
+            try:
+                upload_result = cloudinary.uploader.upload(image_data)
+                image_url = upload_result.get("url")
+            except Exception as e:
+                print(f"Error uploading image to Cloudinary: {e}")
+                return jsonify({"msg": f"Failed to upload image: {e}"}), 500
 
-    access_token = create_access_token(identity=new_user.id)
-    return jsonify(access_token=access_token, user=new_user.serialize()), 201
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        new_user = User(
+            email=email,
+            password=hashed_password.decode('utf-8'),
+            nombre=nombre,
+            telefono=telefono,
+            image_url=image_url
+        )
+        db.session.add(new_user)
+        db.session.commit()
+
+        access_token = create_access_token(identity=new_user.id)
+        return jsonify(access_token=access_token, user=new_user.serialize()), 201
+    except Exception as e:
+        print(f"Error during user registration: {e}")
+        return jsonify({"msg": f"Internal server error: {e}"}), 500
 
 @api.route('/login', methods=['POST'])
 def login():
@@ -122,10 +159,20 @@ def update_user(user_id):
     if not user:
         return jsonify({"msg": "User not found"}), 404
 
-    data = request.get_json()
-    user.nombre = data.get('nombre', user.nombre)
-    user.telefono = data.get('telefono', user.telefono)
-    user.email = data.get('email', user.email)
+    nombre = request.form.get('nombre')
+    telefono = request.form.get('telefono')
+    email = request.form.get('email')
+    image_file = request.files.get('image')
+
+    if nombre:
+        user.nombre = nombre
+    if telefono:
+        user.telefono = telefono
+    if email:
+        user.email = email
+    if image_file:
+        upload_result = cloudinary.uploader.upload(image_file)
+        user.image_url = upload_result.get("url")
 
     db.session.commit()
 

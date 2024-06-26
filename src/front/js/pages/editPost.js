@@ -52,7 +52,7 @@ const EditPost = () => {
             type: "Donación"
         });
         if (success) {
-            navigate('/user-posts');
+            navigate('/profile');
         }
     };
 
