@@ -49,7 +49,7 @@
   
   .login__button {
     max-width: 140px;
-    padding: 15px 30px;
+    padding: 10px 30px;
     margin: 20px auto;
     color: #fff;
     background-color: #D95383;
@@ -100,7 +100,10 @@
   
   
   
-  @media (max-width : 1300px) {
+  @media (max-width : 1400px) {
+    .login__content{
+      height: 85vh;
+    }
     .login__img{
       bottom: 10px;
       width: 380px;

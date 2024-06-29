@@ -1,4 +1,8 @@
 /* header.css */
+.nav{
+background: #f0b644;
+background: linear-gradient(135deg, #dfa227ce, #FFFFFF);
+}
 
 .header-user-icon {
   color: #41403E;
@@ -123,7 +127,7 @@
   box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.1);
 }
 
-.nav-link-custom {
+.nav-link{
   color: #393939 !important; 
   margin: 0 15px; 
   font-size: 16px;
@@ -133,9 +137,9 @@
   box-sizing: border-box !important;
 }
 
-.nav-link-custom:hover {
-  color: #DEAD6F !important; 
-  border-top: 1px solid #DEAD6F;
+.nav-link:hover {
+  color: #D95383 !important; 
+  border-top: 2px solid #D95383;
 }
 
 .active {

@@ -27,7 +27,8 @@
 .user-post-card-img {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  height: 395px;
+  max-height: 300px;
+  max-width: 300px;
   object-fit: cover;
   padding: 5px 5px;
 }

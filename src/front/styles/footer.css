@@ -1,6 +1,8 @@
 .footer-main-container {
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Sombra en el borde superior */
-  }
+    background: #f0b644;
+background: linear-gradient(135deg, #dfa227ce, #FFFFFF);
+}
   
   .footer-container {
     display: flex;
