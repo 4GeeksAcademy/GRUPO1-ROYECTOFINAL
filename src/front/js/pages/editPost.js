@@ -75,16 +75,16 @@ const EditPost = () => {
     }
 
     return (
-        <div className='register__content__create'>
-            <img className='img__form' src={imgForm} alt="form background" />
-            <form className='register__form__add__post' onSubmit={handleSubmit}>
-                <h1 className='register__title'>Editar Donación</h1>
-
+        <div className='registerpostcreate__content__create'>
+            <img className='img__form' src={imgForm}></img>
+            <form className='registerpostcreate__form__add__post' onSubmit={handleSubmit}>
+                <h1 className='registerpostcreate__title'>Descripción de Donación</h1>
+    
                 <Row>
                     <Col>
-                        <label className='register__label' htmlFor="titulo">TÍTULO</label>
+                        <label className='registerpostcreate__label' htmlFor="titulo">TÍTULO</label>
                         <input
-                            className='register__input'
+                            className='registerpostcreate__input'
                             type="text"
                             name="titulo"
                             id="titulo"
@@ -94,10 +94,10 @@ const EditPost = () => {
                             value={formData.titulo}
                             onChange={handleInputChange}
                         />
-
-                        <label className='register__label' htmlFor="subtitulo">SUBTÍTULO</label>
+    
+                        <label className='registerpostcreate__label' htmlFor="subtitulo">SUBTÍTULO</label>
                         <input
-                            className='register__input'
+                            className='registerpostcreate__input'
                             type="text"
                             name="subtitulo"
                             id="subtitulo"
@@ -107,10 +107,10 @@ const EditPost = () => {
                             value={formData.subtitulo}
                             onChange={handleInputChange}
                         />
-
-                        <label className='register__label' htmlFor="imagen">IMAGEN</label>
+    
+                        <label className='registerpostcreate__label' htmlFor="imagen">IMAGEN</label>
                         <input
-                            className='register__input'
+                            className='registerpostcreate__input'
                             type="text"
                             name="imagen"
                             id="imagen"
@@ -119,10 +119,10 @@ const EditPost = () => {
                             value={formData.imagen}
                             onChange={handleInputChange}
                         />
-
-                        <label className='register__label' htmlFor="descripcion">DESCRIPCIÓN</label>
+    
+                        <label className='registerpostcreate__label' htmlFor="descripcion">DESCRIPCIÓN</label>
                         <textarea
-                            className='register__input'
+                            className='registerpostcreate__input'
                             name="descripcion"
                             id="descripcion"
                             required
@@ -132,11 +132,11 @@ const EditPost = () => {
                             onChange={handleInputChange}
                         ></textarea>
                     </Col>
-
+    
                     <Col>
-                        <label className='register__label' htmlFor="telefono">TELÉFONO</label>
+                        <label className='registerpostcreate__label' htmlFor="telefono">TELÉFONO</label>
                         <input
-                            className='register__input'
+                            className='registerpostcreate__input'
                             type="text"
                             name="telefono"
                             id="telefono"
@@ -145,10 +145,10 @@ const EditPost = () => {
                             value={formData.telefono}
                             onChange={handleInputChange}
                         />
-
-                        <label className='register__label' htmlFor="email">EMAIL</label>
+    
+                        <label className='registerpostcreate__label' htmlFor="email">EMAIL</label>
                         <input
-                            className='register__input'
+                            className='registerpostcreate__input'
                             type="email"
                             name="email"
                             id="email"
@@ -157,10 +157,10 @@ const EditPost = () => {
                             value={formData.email}
                             onChange={handleInputChange}
                         />
-
-                        <label className='register__label' htmlFor="ubicacion">UBICACIÓN</label>
+    
+                        <label className='registerpostcreate__label' htmlFor="ubicacion">UBICACIÓN</label>
                         <input
-                            className='register__input'
+                            className='registerpostcreate__input'
                             type="text"
                             name="ubicacion"
                             id="ubicacion"
@@ -169,9 +169,9 @@ const EditPost = () => {
                             value={formData.ubicacion}
                             onChange={handleInputChange}
                         />
-
-                        <label className='register__label' htmlFor="categoria">CATEGORÍA</label>
-                        <select className='register__input' name="categoria" id="categoria" required value={formData.categoria} onChange={handleInputChange}>
+    
+                        <label className='registerpostcreate__label' htmlFor="categoria">CATEGORÍA</label>
+                        <select className='registerpostcreate__input' name="categoria" id="categoria" required value={formData.categoria} onChange={handleInputChange}>
                             <option value="">Seleccione una categoría</option>
                             <option value="Electrodomésticos">Electrodomésticos</option>
                             <option value="Muebles">Muebles</option>
@@ -182,13 +182,14 @@ const EditPost = () => {
                         </select>
                     </Col>
                 </Row>
-
-                <div className="container-button">
-                    <button className='register__button' type='submit'>GUARDAR CAMBIOS</button>
+    
+                <div className="registerpostcreate__container-button">
+                    <button className='registerpostcreate__button' type='submit'>{postId ? 'ACTUALIZAR' : 'CREAR'}</button>
                 </div>
             </form>
         </div>
     );
+    
 };
 
 export default EditPost;

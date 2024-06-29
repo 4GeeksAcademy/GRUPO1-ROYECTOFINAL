@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90vh;
+  height: 80vh;
   background-color: #F9F3EC;
   position: relative;
   padding-top: 50px;
@@ -14,7 +14,7 @@
   width: 450px;
   min-width: 240px;
   border: 1px solid #41403e3f;
-  padding: 25px;
+  padding: 15px;
   border-radius: 10px;
   background-color: #ffffff65;
   color: #41403E;
@@ -26,7 +26,8 @@
 
 .register__title {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
+
 }
 
 .register__label {
@@ -36,7 +37,7 @@
 }
 
 .register__input {
-  padding: 10px;
+  padding: 7px;
   border-radius: 5px;
   border: 0.5px solid #41403e3f;
 }
@@ -46,13 +47,13 @@
   border: 1px solid #DEAD6F;
 }
 
-.button-container{
+.button-container {
   margin: 0 auto;
 }
 
 .register__button {
   max-width: 140px;
-  padding: 15px 30px;
+  padding: 10px 30px;
   margin: 20px auto;
   color: #fff;
   background-color: #D95383;
@@ -73,7 +74,7 @@
   width: 470px;
   position: relative;
   bottom: 100px;
-  z-index: 1; 
+  z-index: 1;
 }
 
 .register__img__portada {
@@ -82,7 +83,7 @@
   animation: float 3s ease-in-out infinite;
 }
 
-.register__link-cuenta{
+.register__link-cuenta {
   text-align: end;
   padding: 0;
   margin-bottom: 0;
@@ -93,9 +94,11 @@
   0% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-10px);
   }
+
   100% {
     transform: translateY(0);
   }
@@ -103,45 +106,71 @@
 
 
 
-@media (max-width : 1300px) {
-  .register__img{
+@media (max-width : 1400px) {
+
+
+  .register__content {
+    margin: 100px 10px 160px 10px;
+  }
+
+  .register__label {
+    margin-bottom: 5px;
+  }
+
+  .register__button {
+    margin: 10px 2px;
+  }
+
+  .register__img {
     bottom: 10px;
     width: 380px;
   }
 
-  .register__img__portada{
+  .register__img__portada {
     height: 500px;
   }
-  
+
 }
 
 @media (max-width : 780px) {
 
-  .register__content{
-      height: 90vh;
-      padding-top: 10px;
+  .register__content {
+    height: 70vh;
+    padding-top: 10px;
 
   }
 
 
-  .register__img{
+  .register__img {
     display: none;
   }
 
-  .register__form{
-     padding: 5px 10px;
+  .register__form {
+    padding: 5px 10px;
 
 
   }
 
-  .register__label{
-      margin: 6px;
-      padding: 3px;
+  .register__label {
+    margin: 6px;
+    padding: 3px;
   }
 
-  .register__label{
-      padding: 3px;
+  .register__label {
+    padding: 3px;
   }
 }
 
+@media (max-width : 480px) {
 
+  .register__content {
+    height: 50vh;
+    padding-top: 50px;
+
+  }
+
+  .register__form {
+    margin: 15px 5px;
+  }
+
+}
