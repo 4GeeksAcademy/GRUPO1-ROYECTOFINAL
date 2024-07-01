@@ -73,13 +73,15 @@ class ContactRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     receiver_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
-    message = db.Column(db.String(500), nullable=True)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    message = db.Column(db.String(120), nullable=True)
+    status = db.Column(db.String(20), default="Pendiente")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    approved_at = db.Column(db.DateTime, nullable=True)
 
-    sender = db.relationship('User', foreign_keys=[sender_id])
-    receiver = db.relationship('User', foreign_keys=[receiver_id])
-    post = db.relationship('Post', backref=db.backref('contact_requests', lazy=True, cascade="all, delete-orphan"))
+    sender = db.relationship('User', foreign_keys=[sender_id], backref=db.backref('sent_requests', lazy=True, cascade="all, delete-orphan"))
+    receiver = db.relationship('User', foreign_keys=[receiver_id], backref=db.backref('received_requests', lazy=True, cascade="all, delete-orphan"))
+    post = db.relationship('Post', backref=db.backref('requests', lazy=True))
 
     def serialize(self):
         return {
@@ -87,7 +89,10 @@ class ContactRequest(db.Model):
             "sender_id": self.sender_id,
             "receiver_id": self.receiver_id,
             "post_id": self.post_id,
-            "post": self.post.serialize(),
             "message": self.message,
-            "timestamp": self.timestamp.isoformat()
+            "status": self.status,
+            "created_at": self.created_at,
+            "approved_at": self.approved_at,
+            "sender": self.sender.serialize() if self.sender else None,
+            "post": self.post.serialize() if self.post else None
         }

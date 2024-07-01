@@ -2,10 +2,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90vh;
+  height: 84vh;
   background-color: #F9F3EC;
   position: relative;
   padding-top: 50px;
+  margin-bottom: 5rem;
 }
 
 .register__form {
@@ -32,7 +33,8 @@
 .register__label {
   text-align: left;
   padding: 5px;
-  margin: 12px 0;
+  margin-bottom: 3px;
+  margin-top: 12px;
 }
 
 .register__input {
@@ -48,6 +50,7 @@
 
 .button-container{
   margin: 0 auto;
+  margin-top: 3px;
 }
 
 .register__button {
@@ -70,16 +73,17 @@
 }
 
 .register__img {
-  width: 470px;
+  width: 468px;
   position: relative;
   bottom: 100px;
   z-index: 1; 
 }
 
 .register__img__portada {
-  height: 700px;
+  height: 585px;
   filter: drop-shadow(-20px 10px 10px rgba(0, 0, 0, 0.397));
   animation: float 3s ease-in-out infinite;
+  margin-top: 9rem;
 }
 
 .register__link-cuenta{
@@ -101,16 +105,24 @@
   }
 }
 
-
+@media (max-width : 1000px) {
+  .register__img{
+    display: none;
+  }
+  /* .register__img__portada{
+    height: 300px;
+  } */
+}
 
 @media (max-width : 1300px) {
-  .register__img{
-    bottom: 10px;
-    width: 380px;
-  }
-
   .register__img__portada{
-    height: 500px;
+    height: 300px;
+  }
+  .register__img__portada {
+    height: 585px;
+    filter: drop-shadow(-20px 10px 10px rgba(0, 0, 0, 0.397));
+    animation: float 3s ease-in-out infinite;
+    margin-top: 9rem;
   }
   
 }
@@ -121,11 +133,6 @@
       height: 90vh;
       padding-top: 10px;
 
-  }
-
-
-  .register__img{
-    display: none;
   }
 
   .register__form{

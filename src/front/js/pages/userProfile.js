@@ -1,9 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Card, Image, Row, Col, Button, Modal, Form } from 'react-bootstrap';
-import { FaPencilAlt, FaEnvelope } from 'react-icons/fa';
+import { FaPencilAlt, FaEnvelope, FaUserSlash } from 'react-icons/fa';
 import '../../styles/userProfile.css';
 import UserPosts from '../component/userPosts';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
 import Requests from '../component/request';
 import { Tooltip } from 'react-tooltip';
@@ -18,6 +18,7 @@ const UserProfile = () => {
         email: store.user?.email || ''
     });
     const [imageFile, setImageFile] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (store.token && store.user) {
@@ -48,6 +49,16 @@ const UserProfile = () => {
         }
     };
 
+    const handleDeleteAccount = async () => {
+        const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.");
+        if (confirmDelete) {
+            const success = await actions.deleteUser(store.user.id);
+            if (success) {
+                navigate('/');  // Redirigir a la página principal o de inicio de sesión
+            }
+        }
+    };
+
     const userDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sit amet accumsan tortor. Nulla facilisi. Nullam ultricies, justo at convallis mollis, nunc ex feugiat odio, et accumsan ipsum nulla ut quam. Phasellus interdum, justo eget aliquet maximus, turpis nulla sollicitudin felis, ut vehicula justo quam ut urna.";
 
     return (
@@ -57,10 +68,12 @@ const UserProfile = () => {
                     <div className="user-image-container">
                         <Image src={store.user?.image_url || "https://res.cloudinary.com/djpifu0cl/image/upload/v1718598453/4geeks_cm8jnn.webp"} roundedCircle className="user-image" />
                     </div>
-                    <div className="button-container-create">
+                    <div className="button-container-top">
                         <Link to="/create-post">
                             <Button className="add-button">Agregar Donación</Button>
                         </Link>
+                    </div>
+                    <div className="button-container-create">
                         <Button className="edit-button" variant="light" onClick={handleShow} data-tooltip-id="editTooltip" data-tooltip-content="Editar tu información">
                             <FaPencilAlt />
                         </Button>
@@ -71,7 +84,12 @@ const UserProfile = () => {
                             <FaEnvelope />
                         </Button>
                         <span className="notification-badge">{store.requests.length}</span>
+
                         <Tooltip id="requestsTooltip" place="bottom" effect="solid" className="custom-tooltip" />
+                        <Button className="delete-button" variant="light" onClick={handleDeleteAccount} data-tooltip-id="deleteTooltip" data-tooltip-content="Eliminar Cuenta">
+                            <FaUserSlash />
+                        </Button>
+                        <Tooltip id="deleteTooltip" place="bottom" effect="solid" className="custom-tooltip" />
                     </div>
                     <Card.Body className="user-profile-body">
                         <Card.Title className="text-center">{store.user?.nombre || 'Nombre del Usuario'}</Card.Title>

@@ -19,6 +19,7 @@ const EditPost = () => {
         ubicacion: '',
         categoria: ''
     });
+    const [imageFile, setImageFile] = useState(null); // Nuevo estado para la imagen
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -43,14 +44,33 @@ const EditPost = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        let imageUrl = formData.imagen;
+
+        if (imageFile) {
+            // Subir la imagen a Cloudinary
+            const uploadFormData = new FormData();
+            uploadFormData.append('file', imageFile);
+            uploadFormData.append('upload_preset', 'your_upload_preset'); // Reemplaza con tu upload preset de Cloudinary
+
+            const response = await fetch(`https://api.cloudinary.com/v1_1/your_cloud_name/image/upload`, {
+                method: 'POST',
+                body: uploadFormData
+            });
+
+            const data = await response.json();
+            imageUrl = data.secure_url;
+        }
+
         const success = await actions.updatePost(postId, {
             title: formData.titulo,
             subtitle: formData.subtitulo,
-            image: formData.imagen,
+            image: imageUrl,
             description: formData.descripcion,
             category: formData.categoria,
             type: "Donación"
         });
+
         if (success) {
             navigate('/profile');
         }
@@ -62,6 +82,10 @@ const EditPost = () => {
             ...formData,
             [name]: value
         });
+    };
+
+    const handleImageChange = (e) => {
+        setImageFile(e.target.files[0]);
     };
 
     if (loading) {
@@ -78,7 +102,19 @@ const EditPost = () => {
         <div className='register__content__create'>
             <img className='img__form' src={imgForm} alt="form background" />
             <form className='register__form__add__post' onSubmit={handleSubmit}>
-                <h1 className='register__title'>Editar Donación</h1>
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h1 className='register__title' style={{ fontSize: '2em' }}>Editar Donación</h1>
+                    {formData.imagen && (
+                        <a href={`/post/${postId}`} target="_blank" rel="noopener noreferrer">
+                            <img
+                                src={formData.imagen}
+                                alt="Post Thumbnail"
+                                className="img-thumbnail"
+                                style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                            />
+                        </a>
+                    )}
+                </div>
 
                 <Row>
                     <Col>
@@ -111,13 +147,10 @@ const EditPost = () => {
                         <label className='register__label' htmlFor="imagen">IMAGEN</label>
                         <input
                             className='register__input'
-                            type="text"
+                            type="file"
                             name="imagen"
                             id="imagen"
-                            required
-                            placeholder='Ingrese la URL de la imagen'
-                            value={formData.imagen}
-                            onChange={handleInputChange}
+                            onChange={handleImageChange}
                         />
 
                         <label className='register__label' htmlFor="descripcion">DESCRIPCIÓN</label>

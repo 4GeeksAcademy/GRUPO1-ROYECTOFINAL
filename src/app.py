@@ -16,9 +16,9 @@ import cloudinary.uploader
 
 # Configuración de Cloudinary
 cloudinary.config(
-    cloud_name = 'djpifu0cl', 
-    api_key = '728872235866552',
-    api_secret = '-ZWCi3RFfneVx4FS4L1jp8sKyOE'
+    cloud_name='djpifu0cl', 
+    api_key='728872235866552',
+    api_secret='-ZWCi3RFfneVx4FS4L1jp8sKyOE'
 )
 
 # Cargar variables de entorno
@@ -70,7 +70,6 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
- 
 # Ruta para subir imagen
 @api.route('/upload', methods=['POST'])
 def upload_image():
@@ -82,7 +81,6 @@ def upload_image():
 
 # Rutas
 
-# En la ruta de registro
 @api.route('/register', methods=['POST'])
 def register():
     try:
@@ -178,11 +176,40 @@ def update_user(user_id):
 
     return jsonify(user.serialize()), 200
 
+@api.route('/users/<int:user_id>', methods=['DELETE'])
+@jwt_required()
+def delete_user(user_id):
+    current_user_id = get_jwt_identity()
+    if current_user_id != user_id:
+        return jsonify({"msg": "Unauthorized"}), 403
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
+
+    try:
+        # Eliminar todas las solicitudes de contacto donde el usuario es el remitente o el receptor
+        ContactRequest.query.filter((ContactRequest.sender_id == user_id) | (ContactRequest.receiver_id == user_id)).delete()
+
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({"msg": "User deleted"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"msg": "Error deleting user", "error": str(e)}), 500
+
 @api.route('/posts', methods=['GET'])
 @jwt_required()
 def get_all_posts():
     user_id = get_jwt_identity()
     posts = Post.query.all()
+    return jsonify([post.serialize() for post in posts]), 200
+
+@api.route('/user-posts', methods=['GET'])
+@jwt_required()
+def get_user_posts():
+    current_user_id = get_jwt_identity()
+    posts = Post.query.filter_by(user_id=current_user_id).all()
     return jsonify([post.serialize() for post in posts]), 200
 
 @api.route('/posts', methods=['POST'])
@@ -316,11 +343,11 @@ def create_contact_request():
         return jsonify({"msg": "Post not found"}), 404
 
     if post.user_id == current_user_id:
-        return jsonify({"msg": "Cannot request contact for your own post"}), 400
+        return jsonify("No puede solicitar contacto de tus propios posts."), 400
 
     existing_request = ContactRequest.query.filter_by(sender_id=current_user_id, post_id=post_id).first()
     if existing_request:
-        return jsonify({"msg": "Contact request already sent"}), 400
+        return jsonify("Ya tienes una solicitud pendiente para este post."), 400
 
     new_request = ContactRequest(
         sender_id=current_user_id,
@@ -346,6 +373,63 @@ def get_sent_contact_requests():
     current_user_id = get_jwt_identity()
     requests = ContactRequest.query.filter_by(sender_id=current_user_id).all()
     return jsonify([request.serialize() for request in requests]), 200
+
+@api.route('/contact-requests/<int:request_id>/accept', methods=['POST'])
+@jwt_required()
+def accept_contact_request(request_id):
+    current_user_id = get_jwt_identity()
+    contact_request = ContactRequest.query.get(request_id)
+    
+    if contact_request and contact_request.receiver_id == current_user_id:
+        contact_request.status = "Aprobada"
+        contact_request.approved_at = datetime.utcnow()
+        db.session.commit()
+        return jsonify(contact_request.serialize()), 200
+    return jsonify({"msg": "Unauthorized or request not found"}), 403
+
+@api.route('/contact-requests/<int:request_id>/reject', methods=['POST'])
+@jwt_required()
+def reject_contact_request(request_id):
+    current_user_id = get_jwt_identity()
+    contact_request = ContactRequest.query.get(request_id)
+    
+    if contact_request and contact_request.receiver_id == current_user_id:
+        contact_request.status = "Rechazada"
+        contact_request.approved_at = datetime.utcnow()
+        db.session.commit()
+        return jsonify(contact_request.serialize()), 200
+    return jsonify({"msg": "Unauthorized or request not found"}), 403
+
+@api.route('/contact-requests/history', methods=['GET'])
+@jwt_required()
+def get_contact_request_history():
+    current_user_id = get_jwt_identity()
+    history = ContactRequest.query.filter(
+        (ContactRequest.sender_id == current_user_id) |
+        (ContactRequest.receiver_id == current_user_id)
+    ).order_by(ContactRequest.approved_at.desc()).limit(6).all()
+
+    result = []
+    for request in history:
+        action = ""
+        if request.sender_id == current_user_id:  # The current user sent the request
+            if request.status == "Aprobada":
+                action = f"Te aprobó: {request.receiver.nombre}"
+            elif request.status == "Rechazada":
+                action = f"Te rechazó: {request.receiver.nombre}"
+        elif request.receiver_id == current_user_id:  # The current user received the request
+            if request.status == "Aprobada":
+                action = f"Aprobaste a: {request.sender.nombre}"
+            elif request.status == "Rechazada":
+                action = f"Rechazaste a: {request.sender.nombre}"
+
+        result.append({
+            "id": request.id,
+            "action": action,
+            "approved_at": request.approved_at
+        })
+    
+    return jsonify(result), 200
 
 # Registrar el Blueprint
 app.register_blueprint(api, url_prefix='/api')

@@ -35,7 +35,7 @@
 
 .user-image-container {
   position: absolute;
-  top: -100px;
+  top: -80px;
   left: 50%;
   transform: translateX(-50%);
   background-color: white;
@@ -44,8 +44,8 @@
 }
 
 .user-image {
-  width: 195px;
-  height: 195px;
+  width: 170px;
+  height: 170px;
   object-fit: cover;
 }
 
@@ -102,7 +102,7 @@
 .message-button {
   border: none;
   background-color: transparent;
-  font-size: 1.5em;
+  font-size: 29px;
   color: #565656;
   cursor: pointer;
   margin-top: 7px !important;
@@ -110,8 +110,8 @@
 
 .notification-badge {
   position: absolute;
-  top: 9px;
-  right: 5px;
+  top: 13px;
+  right: 72px;
   background-color: #D95383;
   color: white;
   border-radius: 50%;

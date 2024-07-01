@@ -3,9 +3,10 @@ import '../../styles/Login.css';
 import loginIMG from '../../img/register.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
+import Swal from 'sweetalert2';
 
 export const Login = () => {
-  const { actions } = useContext(Context);
+  const { store, actions } = useContext(Context);
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,9 +16,23 @@ export const Login = () => {
     e.preventDefault();
     const success = await actions.loginUser({ email, password });
     if (success) {
+      const userName = store.user?.nombre || 'Usuario';
+      Swal.fire({
+        icon: 'success',
+        title: `¡Bienvenidx ${userName}!`,
+        text: 'Iniciaste sesión correctamente',
+        showConfirmButton: false,
+        timer: 2000
+      });
       console.log("Login successful, redirecting...");
-      navigate('/'); 
+      navigate('/');
     } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al iniciar sesión',
+        text: 'Credenciales incorrectas, por favor intente de nuevo.',
+        showConfirmButton: true,
+      });
       setError('Credenciales incorrectas, por favor intente de nuevo.');
     }
   };

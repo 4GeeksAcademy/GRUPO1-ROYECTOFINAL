@@ -10,7 +10,7 @@
   background-color: #F9F3EC;
   margin-top: 40px;
   padding-bottom: 40px;
-  margin-bottom: 40px;
+  margin-bottom: 100px;
 }
 
 
@@ -22,12 +22,23 @@
   margin-bottom: 20px;
   max-height: 520px;
   cursor: pointer;
+  transition: all .3s;
+}
+.user-post-card:hover {
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  max-height: 520px;
+  cursor: pointer;
+  transform: scale(1.07);
 }
 
 .user-post-card-img {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  height: 395px;
+  height: 210px;
   object-fit: cover;
   padding: 5px 5px;
 }
@@ -134,10 +145,17 @@
   gap: 16px;
 }
 
-.title-posts {
-  font-size: 45px !important;
-  margin-bottom: 4rem !important;
-}
+  .title-posts {
+    font-size: 45px !important;
+    margin-bottom: 2.5rem !important;
+  }
+  .subtitle-posts {
+    font-size: 30px !important;
+    margin-bottom: 4rem !important;
+    color: #d96a90;
+    font-weight: bold;
+    font-family: 'Quicksand', sans-serif;
+  }
 
 
 .delete-icon {

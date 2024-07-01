@@ -6,3 +6,58 @@ body {
     width: 70px !important;
     height: 70px !important;
 }
+
+.back-button {
+    color: #d95383;
+    font-size: 26px !important;
+}
+
+.table-success {
+    background-color: #d4edda;
+}
+
+.table-danger {
+    background-color: #f8d7da;
+}
+.button-container-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+}
+
+.add-button,
+.delete-button {
+    background-color: #007bff; /* El color que desees */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.add-button,
+.delete-button:hover {
+    background-color: #007bff; /* El color que desees */
+    color: rgb(255, 130, 193);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.add-button:hover,
+.delete-button:hover {
+    background-color: #0056b3; /* El color que desees para el hover */
+}
+.user-name{
+    /* margin-top: 5px; */
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.swal2-popup-custom {
+    z-index: 1060; /* Asegúrate de que sea mayor que el z-index del modal de Bootstrap */
+}

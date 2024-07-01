@@ -49,12 +49,12 @@ export const Header = () => {
                                 </div>
                                 <Tooltip id="requestsTooltip" place="bottom" effect="solid" className="custom-tooltip" />
                                 <div className="header-favorites-icon-container mr-3">
-                                    <Link className="header-favorites-icon" to="/favorites">
-                                        <div className="position-relative">
+                                    {/* <Link className="header-favorites-icon" to="/"> */}
+                                        <div className="position-relative header-favorites-icon">
                                             <FaHeart size={24} />
                                             <span className="badge">{store.favorites.length}</span>
                                         </div>  
-                                    </Link>
+                                    {/* </Link> */}
                                     <div className="dropdown-content">
                                         {store.favorites.length > 0 ? (
                                             store.favorites.map((favorite) => (

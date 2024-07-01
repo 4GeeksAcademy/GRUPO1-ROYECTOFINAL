@@ -27,8 +27,8 @@
 }
 
 .register__title {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 29px;
+    margin-bottom: 2px;
     text-align: center;
     color: #333;
 }
@@ -41,8 +41,8 @@
 
 .register__input {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
+    padding: 4px 10px;
+    margin-bottom: -12px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;

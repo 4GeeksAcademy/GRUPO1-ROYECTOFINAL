@@ -3,6 +3,7 @@ import '../../styles/Register.css';
 import registerIMG from '../../img/register.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
+import Swal from 'sweetalert2';
 
 export const Register = () => {
     const { actions } = useContext(Context);
@@ -19,6 +20,13 @@ export const Register = () => {
         e.preventDefault();
         const success = await actions.registerUser(formData);
         if (success) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Gracias por crear tu cuenta!',
+                text: 'Que disfrutes la aplicación.',
+                showConfirmButton: false,
+                timer: 2500
+            });
             navigate('/');
         }
     };

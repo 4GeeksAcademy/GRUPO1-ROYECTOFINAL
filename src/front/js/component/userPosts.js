@@ -27,7 +27,7 @@ const UserPosts = () => {
 
     const handleDeleteClick = async (e, postId) => {
         e.stopPropagation();
-        const confirmDelete = window.confirm("¿Estás segurx que deseas eliminar el Post?");
+        const confirmDelete = window.confirm("¿Estás seguro que deseas eliminar el Post?");
         if (confirmDelete) {
             await actions.deletePost(postId);
             actions.getPostsByUser(); // Volver a cargar los posts después de eliminar

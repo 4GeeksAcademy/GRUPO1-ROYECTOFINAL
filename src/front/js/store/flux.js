@@ -26,6 +26,26 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
                 return response;
             },
+            
+            uploadImageToCloudinary: async (imageFile) => {
+                const formData = new FormData();
+                formData.append('file', imageFile);
+
+                const options = {
+                    method: 'POST',
+                    body: formData,
+                };
+
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/upload`, options);
+                    if (!response.ok) throw new Error('Failed to upload image');
+                    const data = await response.json();
+                    return data;
+                } catch (error) {
+                    console.error('Error uploading image:', error);
+                    return null;
+                }
+            },
 
             getMessage: async () => {
                 try {
@@ -137,11 +157,35 @@ const getState = ({ getStore, getActions, setStore }) => {
                     console.error("Error fetching user details:", error);
                 }
             },
+            deleteUser: async (userId) => {
+                const store = getStore();
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/users/${userId}`, {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${store.token}`
+                        }
+                    });
+                    if (response.ok) {
+                        setStore({ user: null, token: null });
+                        localStorage.removeItem("user");
+                        localStorage.removeItem("token");
+                        return true;
+                    } else {
+                        console.error("Error deleting user:", await response.text());
+                        return false;
+                    }
+                } catch (error) {
+                    console.error("Error deleting user:", error);
+                    return false;
+                }
+            },
 
             getPostsByUser: async () => {
                 const store = getStore();
                 try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/api/posts`, {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/user-posts`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
@@ -378,14 +422,36 @@ const getState = ({ getStore, getActions, setStore }) => {
                     if (checkedResponse.ok) {
                         const newRequest = await checkedResponse.json();
                         setStore({ requests: [...store.requests, newRequest] });
-                        return true;
+                        return { success: true };
                     } else {
-                        console.error("Error creating contact request:", await checkedResponse.text());
-                        return false;
+                        const errorMsg = await checkedResponse.text();
+                        console.error("Error creating contact request:", errorMsg);
+                        return { success: false, msg: errorMsg };
                     }
                 } catch (error) {
                     console.error("Error creating contact request:", error);
-                    return false;
+                    return { success: false, msg: "Error al enviar la solicitud de contacto" };
+                }
+            },
+
+            getContactRequestHistory: async () => {
+                const store = getStore();
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/contact-requests/history`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${store.token}`
+                        }
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        setStore({ contactRequestHistory: data });
+                    } else {
+                        console.error("Error fetching contact request history:", await response.text());
+                    }
+                } catch (error) {
+                    console.error("Error fetching contact request history:", error);
                 }
             },
 

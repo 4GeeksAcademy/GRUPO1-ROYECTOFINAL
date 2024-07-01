@@ -1,88 +1,232 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Card, Container, Row, Col, Button, Spinner } from 'react-bootstrap';
-import '../../styles/postDetails.css';
+import React, { useContext, useEffect } from 'react';
+import { Modal, Button, Table } from 'react-bootstrap';
 import { Context } from '../store/appContext';
+import { format } from 'date-fns';
+import Swal from 'sweetalert2';
 
-const PostDetails = () => {
+const Requests = ({ show, handleClose }) => {
     const { store, actions } = useContext(Context);
-    const { postId } = useParams();
-    const [hasContactRequest, setHasContactRequest] = useState(false);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchPost = async () => {
-            await actions.getPost(postId);
-            setLoading(false);
-        };
-        fetchPost();
-    }, [postId]);
+        if (store.token) {
+            actions.getRequests();
+            actions.getSentRequests();
+            actions.getContactRequestHistory(); // Fetch the history
+        }
+    }, [store.token]);
 
-    useEffect(() => {
-        const checkContactRequest = async () => {
-            if (store.user && store.currentPost) {
-                const requests = await actions.getRequests();
-                const requestExists = requests.some(request => request.post_id === store.currentPost.id && request.sender_id === store.user.id);
-                setHasContactRequest(requestExists);
+    const formatDateTime = (dateString) => {
+        if (!dateString) return 'N/A';
+        return format(new Date(dateString), 'dd/MM/yyyy HH:mm:ss');
+    };
+
+    const handleAccept = async (requestId) => {
+        try {
+            const response = await fetch(`${process.env.BACKEND_URL}/api/contact-requests/${requestId}/accept`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${store.token}`
+                }
+            });
+
+            if (response.ok) {
+                const newRequests = store.requests.filter(request => request.id !== requestId);
+                actions.setStore({ requests: newRequests });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'La solicitud fue aprobada con éxito',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            } else {
+                const errorMsg = await response.text();
+                console.error("Error accepting request:", errorMsg);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al aprobar la solicitud',
+                    text: errorMsg,
+                    showConfirmButton: false,
+                    timer: 2000
+                });
             }
-        };
-        checkContactRequest();
-    }, [store.user, store.currentPost]);
+        } catch (error) {
+            console.error("Error accepting request:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al aprobar la solicitud',
+                text: error.message,
+                showConfirmButton: false,
+                timer: 2000
+            });
+        }
+    };
 
-    const post = store.currentPost;
+    const handleReject = async (requestId) => {
+        try {
+            const response = await fetch(`${process.env.BACKEND_URL}/api/contact-requests/${requestId}/reject`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${store.token}`
+                }
+            });
 
-    if (loading) {
-        return (
-            <div className="d-flex justify-content-center align-items-center" style={{ height: '90vh' }}>
-                <Spinner animation="border" role="status" className="spinner">
-                    <span className="visually-hidden">Loading...</span>
-                </Spinner>
-            </div>
-        );
-    }
-
-    const handleContact = async () => {
-        const request = {
-            receiver_id: post.user_id,
-            post_id: postId,
-            message: "Estoy interesado en este post"
-        };
-        const success = await actions.createContactRequest(request);
-        if (success) {
-            alert("Solicitud de contacto enviada con éxito");
-            setHasContactRequest(true);
-        } else {
-            alert("Error al enviar la solicitud de contacto");
+            if (response.ok) {
+                const newRequests = store.requests.filter(request => request.id !== requestId);
+                actions.setStore({ requests: newRequests });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'La solicitud fue rechazada satisfactoriamente',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            } else {
+                const errorMsg = await response.text();
+                console.error("Error rejecting request:", errorMsg);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al rechazar la solicitud',
+                    text: errorMsg,
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
+        } catch (error) {
+            console.error("Error rejecting request:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al rechazar la solicitud',
+                text: error.message,
+                showConfirmButton: false,
+                timer: 2000
+            });
         }
     };
 
     return (
-        <Container className="post-details-container">
-            <Card className="post-details-card">
-                <Row noGutters={true}>
-                    <Col md={6}>
-                        <Card.Img variant="top" src={post.image} className="post-details-card-img" />
-                    </Col>
-                    <Col md={6} className='details__center'>
-                        <Card.Body className="post-details-card-body">
-                            <Card.Title>{post.title}</Card.Title>
-                            <Card.Subtitle className="mb-2 text-muted">{post.subtitle}</Card.Subtitle>
-                            <ul className="post-details-list">
-                                <li>{post.description}</li>
-                                <li><strong>Categoria:</strong> {post.category}</li>
-                                <li><strong>GRATIS | </strong> {post.type}</li>
-                            </ul>
-                            {hasContactRequest ? (
-                                <p>Tu solicitud ya fue enviada, te avisaremos cuando sea aprobada por el autor.</p>
-                            ) : (
-                                <Button className="contact-button" onClick={handleContact}>Contactar</Button>
-                            )}
-                        </Card.Body>
-                    </Col>
-                </Row>
-            </Card>
-        </Container>
+        <Modal show={show} onHide={handleClose} centered size="lg">
+            <Modal.Header closeButton>
+                <Modal.Title>SOLICITUD</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <h5>Solicitudes Recibidas</h5>
+                {store.requests && store.requests.length > 0 ? (
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Nombre del Solicitante</th>
+                                <th>Imagen</th>
+                                <th>Título</th>
+                                <th>Fecha de Solicitud</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {store.requests.map(request => {
+                                const post = request.post || {};
+                                const sender = request.sender || {};
+                                return (
+                                    <tr key={request.id}>
+                                        <td>{sender.nombre || 'Desconocido'}</td>
+                                        <td>
+                                            {post.image ? (
+                                                <img src={post.image} alt={post.title} style={{ width: '50px' }} />
+                                            ) : (
+                                                'Sin imagen'
+                                            )}
+                                        </td>
+                                        <td>{post.title || 'Sin título'}</td>
+                                        <td>{formatDateTime(request.created_at)}</td>
+                                        <td>
+                                            <Button
+                                                variant="primary"
+                                                onClick={() => handleAccept(request.id)}
+                                            >
+                                                Aceptar
+                                            </Button>
+                                            <Button
+                                                variant="danger"
+                                                onClick={() => handleReject(request.id)}
+                                            >
+                                                Rechazar
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
+                ) : (
+                    <p>No hay solicitudes de contacto recibidas.</p>
+                )}
+
+                <h5>Solicitudes Realizadas</h5>
+                {store.sentRequests && store.sentRequests.length > 0 ? (
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Título</th>
+                                <th>Fecha de Solicitud</th>
+                                <th>Estado</th>
+                                <th>Fecha de Aprobación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {store.sentRequests.map(request => {
+                                const post = request.post || {};
+                                return (
+                                    <tr key={request.id} className={request.status === 'Aprobada' ? 'table-success' : request.status === 'Rechazada' ? 'table-danger' : ''}>
+                                        <td>
+                                            {post.image ? (
+                                                <img src={post.image} alt={post.title} style={{ width: '50px' }} />
+                                            ) : (
+                                                'Sin imagen'
+                                            )}
+                                        </td>
+                                        <td>{post.title || 'Sin título'}</td>
+                                        <td>{formatDateTime(request.created_at)}</td>
+                                        <td>{request.status}</td>
+                                        <td>{request.status === 'Aprobada' ? formatDateTime(request.approved_at) : 'N/A'}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
+                ) : (
+                    <p>No hay solicitudes de contacto realizadas.</p>
+                )}
+
+                <h5>Historial de Operaciones</h5>
+                {store.contactRequestHistory && store.contactRequestHistory.length > 0 ? (
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Operación</th>
+                                <th>Fecha de Aprobación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {store.contactRequestHistory.map(history => (
+                                <tr key={history.id}>
+                                    <td>{history.action}</td>
+                                    <td>{formatDateTime(history.approved_at)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                ) : (
+                    <p>No hay historial de operaciones.</p>
+                )}
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    Cerrar
+                </Button>
+            </Modal.Footer>
+        </Modal>
     );
 };
 
-export default PostDetails;
+export default Requests;

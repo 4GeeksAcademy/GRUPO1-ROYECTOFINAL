@@ -1,9 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import '../../styles/CreatePost.css';
-import imgForm from "../../img/img__form.jpg"
+import imgForm from "../../img/img__form.jpg";
 import { Context } from '../store/appContext';
 import { useNavigate, useParams } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa';
+import { Tooltip } from 'react-tooltip';
+import Swal from 'sweetalert2';
 
 export const CreatePost = () => {
     const { store, actions } = useContext(Context);
@@ -12,13 +15,13 @@ export const CreatePost = () => {
     const [formData, setFormData] = useState({
         titulo: '',
         subtitulo: '',
-        imagen: '',
         descripcion: '',
         telefono: '',
         email: '',
         ubicacion: '',
         categoria: ''
     });
+    const [imageFile, setImageFile] = useState(null);
 
     useEffect(() => {
         if (postId) {
@@ -28,7 +31,6 @@ export const CreatePost = () => {
                     setFormData({
                         titulo: post.title,
                         subtitulo: post.subtitle,
-                        imagen: post.image,
                         descripcion: post.description,
                         telefono: post.telefono,
                         email: post.email,
@@ -43,10 +45,17 @@ export const CreatePost = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        let imageUrl = null;
+        if (imageFile) {
+            const uploadResult = await actions.uploadImageToCloudinary(imageFile);
+            if (uploadResult) {
+                imageUrl = uploadResult.secure_url;
+            }
+        }
         const postData = {
             title: formData.titulo,
             subtitle: formData.subtitulo,
-            image: formData.imagen,
+            image: imageUrl,
             description: formData.descripcion,
             category: formData.categoria,
             type: "Donación"
@@ -54,6 +63,12 @@ export const CreatePost = () => {
 
         const success = postId ? await actions.updatePost(postId, postData) : await actions.createPost(postData);
         if (success) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Tu post fue creado de manera exitosa!',
+                showConfirmButton: false,
+                timer: 200
+            });
             navigate('/profile');
         }
     };
@@ -66,11 +81,31 @@ export const CreatePost = () => {
         });
     };
 
+    const handleImageChange = (e) => {
+        setImageFile(e.target.files[0]);
+    };
+
+    const handleBackClick = () => {
+        navigate('/profile');
+    };
+
     return (
         <div className='register__content__create'>
-            <img className='img__form' src={imgForm}></img>
+            <img className='img__form' src={imgForm} alt="Formulario" />
             <form className='register__form__add__post' onSubmit={handleSubmit}>
-                <h1 className='register__title'>Descripción de Donación</h1>
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h1 className='register__title' style={{ fontSize: '2em' }}>Descripción de Donación</h1>
+                    <button
+                        type="button"
+                        className="btn btn-link"
+                        onClick={handleBackClick}
+                        data-tooltip-id="backTooltip"
+                        data-tooltip-content="Volver al perfil"
+                    >
+                        <FaArrowLeft size={24} />
+                    </button>
+                    <Tooltip id="backTooltip" place="bottom" effect="solid" className="custom-tooltip" />
+                </div>
 
                 <Row>
                     <Col>
@@ -103,13 +138,10 @@ export const CreatePost = () => {
                         <label className='register__label' htmlFor="imagen">IMAGEN</label>
                         <input
                             className='register__input'
-                            type="text"
+                            type="file"
                             name="imagen"
                             id="imagen"
-                            required
-                            placeholder='Ingrese la URL de la imagen'
-                            value={formData.imagen}
-                            onChange={handleInputChange}
+                            onChange={handleImageChange}
                         />
 
                         <label className='register__label' htmlFor="descripcion">DESCRIPCIÓN</label>

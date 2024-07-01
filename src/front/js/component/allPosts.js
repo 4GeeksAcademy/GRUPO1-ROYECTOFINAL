@@ -48,7 +48,8 @@ const AllPosts = () => {
     return (
         <div className="user-posts-main-container">
             <div className="user-posts-container">
-                <h2 className="text-center mb-4 title-posts">Encuentra lo que necesitas</h2>
+                <h2 className="text-center mb-4 title-posts">¡Encuentra lo que necesitas!</h2>
+                <h4 className="text-center mb-4 subtitle-posts">Solicita contacto y coordina con el oferente.</h4>
                 <Row className="articles">
                     {store.posts.length > 0 ? store.posts.map((post, index) => (
                         <Col key={index} md={4}>
