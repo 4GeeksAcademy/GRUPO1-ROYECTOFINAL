@@ -26,7 +26,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
                 return response;
             },
-            
+
             uploadImageToCloudinary: async (imageFile) => {
                 const formData = new FormData();
                 formData.append('file', imageFile);
@@ -105,7 +105,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
             updateUser: async (userData, imageFile) => {
                 const store = getStore();
-            
+
                 const formData = new FormData();
                 formData.append('nombre', userData.nombre);
                 formData.append('telefono', userData.telefono);
@@ -113,7 +113,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 if (imageFile) {
                     formData.append('image', imageFile);
                 }
-            
+
                 const options = {
                     method: 'PUT',
                     headers: {
@@ -121,11 +121,11 @@ const getState = ({ getStore, getActions, setStore }) => {
                     },
                     body: formData,
                 };
-            
+
                 try {
                     const response = await fetch(`${process.env.BACKEND_URL}/api/users/${store.user.id}`, options);
                     if (!response.ok) throw new Error('Error updating user');
-            
+
                     const updatedUser = await response.json();
                     setStore({ user: updatedUser });
                     return true;
@@ -157,6 +157,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     console.error("Error fetching user details:", error);
                 }
             },
+
             deleteUser: async (userId) => {
                 const store = getStore();
                 try {
@@ -519,6 +520,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     console.error("Error accepting request:", error);
                 }
             },
+
             rejectRequest: async (requestId) => {
                 const store = getStore();
                 try {
@@ -539,6 +541,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     console.error("Error rejecting request:", error);
                 }
             },
+
             logout: () => {
                 setStore({ token: null, user: null, favorites: [], requests: [] });
                 localStorage.removeItem("token");

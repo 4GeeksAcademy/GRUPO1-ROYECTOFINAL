@@ -16,7 +16,7 @@ import cloudinary.uploader
 
 # Configuración de Cloudinary
 cloudinary.config(
-    cloud_name='djpifu0cl', 
+    cloud_name='djpifu0cl',
     api_key='728872235866552',
     api_secret='-ZWCi3RFfneVx4FS4L1jp8sKyOE'
 )
@@ -65,7 +65,7 @@ def create_hardcoded_data():
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
-# generate sitemap with all your endpoints
+# Generate sitemap with all your endpoints
 @app.route('/')
 def sitemap():
     return generate_sitemap(app)
@@ -379,7 +379,7 @@ def get_sent_contact_requests():
 def accept_contact_request(request_id):
     current_user_id = get_jwt_identity()
     contact_request = ContactRequest.query.get(request_id)
-    
+
     if contact_request and contact_request.receiver_id == current_user_id:
         contact_request.status = "Aprobada"
         contact_request.approved_at = datetime.utcnow()
@@ -392,7 +392,7 @@ def accept_contact_request(request_id):
 def reject_contact_request(request_id):
     current_user_id = get_jwt_identity()
     contact_request = ContactRequest.query.get(request_id)
-    
+
     if contact_request and contact_request.receiver_id == current_user_id:
         contact_request.status = "Rechazada"
         contact_request.approved_at = datetime.utcnow()
@@ -428,7 +428,7 @@ def get_contact_request_history():
             "action": action,
             "approved_at": request.approved_at
         })
-    
+
     return jsonify(result), 200
 
 # Registrar el Blueprint
