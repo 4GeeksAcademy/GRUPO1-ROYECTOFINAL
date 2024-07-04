@@ -3,17 +3,24 @@ import { Container, Table, Button, Spinner } from 'react-bootstrap';
 import { Context } from '../store/appContext';
 import { format } from 'date-fns';
 import emailjs from 'emailjs-com';
+import Swal from 'sweetalert2';
 import "../../styles/ContactDashboard.css";
 
 const ContactDashboard = () => {
     const { store, actions } = useContext(Context);
     const [loading, setLoading] = useState(true);
+    console.log('Renderizando ContactDashboard');
 
     useEffect(() => {
+        console.log('useEffect para fetchData');
         const fetchData = async () => {
             if (store.token) {
-                await actions.getRequests();
+                console.log('Fetching requests');
+                const requests = await actions.getRequests();
+                console.log('Fetched requests:', requests);
+                console.log('Fetching sent requests');
                 await actions.getSentRequests();
+                console.log('Fetching contact request history');
                 await actions.getContactRequestHistory();
                 setLoading(false);
             }
@@ -28,34 +35,48 @@ const ContactDashboard = () => {
     };
 
     const handleAccept = async (requestId) => {
+        console.log(`Aceptando solicitud con ID: ${requestId}`);
+        const request = store.requests.find(req => req.id === requestId);
+        if (request) {
+            sendEmail(request);
+        } else {
+            console.error('No se encontró la solicitud antes de aceptar');
+            return;
+        }
         const success = await actions.acceptRequest(requestId);
+        console.log(`Resultado de aceptar solicitud: ${success}`);
         if (success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Aceptaste la solicitud correctamente',
+                text: 'Tenemos tu información y se la compartiremos al usuario',
+                timer: 3000,
+                showConfirmButton: false
+            });
+            console.log('Actualizando solicitudes y historial');
             await actions.getRequests();
             await actions.getContactRequestHistory();
-
-            const request = store.requests.find(req => req.id === requestId);
-            if (request) {
-                sendEmail(request);
-            }
+        } else {
+            console.error('No se pudo aceptar la solicitud');
         }
     };
 
     const sendEmail = (request) => {
-        console.log('Entra a la función')
+        console.log('Enviando correo electrónico');
         const templateParams = {
             sender_email: request.sender.email,
             sender_name: request.sender.nombre,
             receiver_email: store.user.email,
             receiver_name: store.user.nombre,
             post_title: request.post.title,
-            message: `Tu solicitud de contacto ha sido aceptada. Información del usuario:
+            message: `Tu solicitud de contacto ha sido aceptada. Aquí tienes los datos del usuario que aceptó tu solicitud:
                 Nombre: ${store.user.nombre}
                 Email: ${store.user.email}
                 Teléfono: ${store.user.telefono}`
         };
-        console.log(templateParams)
+        console.log('Parámetros de la plantilla:', templateParams);
 
-        emailjs.send('service_fh8nrf9', 'template_2a4audk', templateParams, 'b6NNLnqS-HA4bOb2s')
+        emailjs.send('service_8cznlvo', 'template_2a4audk', templateParams, 'b6NNLnqS-HA4bOb2s')
             .then(response => {
                 console.log('Correo enviado exitosamente', response.status, response.text);
             })
@@ -65,10 +86,21 @@ const ContactDashboard = () => {
     };
 
     const handleReject = async (requestId) => {
+        console.log(`Rechazando solicitud con ID: ${requestId}`);
         const success = await actions.rejectRequest(requestId);
+        console.log(`Resultado de rechazar solicitud: ${success}`);
         if (success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Rechazaste correctamente la solicitud',
+                timer: 3000,
+                showConfirmButton: false
+            });
+            console.log('Actualizando solicitudes y historial');
             await actions.getRequests();
             await actions.getContactRequestHistory();
+        } else {
+            console.error('No se pudo rechazar la solicitud');
         }
     };
 

@@ -1,14 +1,34 @@
-import React from "react";
-import responsive from "../../img/responsive.png"
-import shirt from "../../img/tshirt.png"
-import kitchen from "../../img/kitchen.png"
-import customer from "../../img/customer-service.png"
-import hands from "../../img/hands.png"
-import bg from "../../img/bg.mp4"
+import React, { useContext, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import responsive from "../../img/responsive.png";
+import shirt from "../../img/tshirt.png";
+import kitchen from "../../img/kitchen.png";
+import customer from "../../img/customer-service.png";
+import hands from "../../img/hands.png";
+import bg from "../../img/bg.mp4";
 import AllPosts from "../component/allPosts";
+import { Context } from "../store/appContext";
 import "../../styles/Home.css";
 
 export const Home = () => {
+    const navigate = useNavigate();
+    const { store } = useContext(Context);
+    const allPostsRef = useRef(null);
+
+    const handleViewMoreClick = () => {
+        if (allPostsRef.current) {
+            allPostsRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    };
+
+    const handlePostNowClick = () => {
+        if (store.token) {
+            navigate("/create-post"); // Redirigir a crear post si hay sesión
+        } else {
+            navigate("/login"); // Redirigir a login si no hay sesión
+        }
+    };
+
     return (
         <div className="home__content-section">
             <div className="home__content"> 
@@ -16,7 +36,7 @@ export const Home = () => {
                     <p className="home__title-presentation t-principal">Regala lo que no usas </p>
                     <p className="home__title-presentation t-principal">Encuentra lo que necesitas</p>
                     <p className="home__title-presentation t-principal"><span className="home__parrafo-presentation">Bienvenido a Second Chances! </span></p>
-                    <button className="home__button button-home">Ver más</button>
+                    <button className="home__button button-home" onClick={handleViewMoreClick}>Ver más</button>
                 </article>
                 <video muted autoPlay loop>
                     <source src={bg} type="video/mp4"></source>
@@ -24,7 +44,7 @@ export const Home = () => {
                 <div className="blur"></div>
             </div>
             
-            <section>
+            <section ref={allPostsRef}>
                 <AllPosts />
             </section>
 
@@ -62,7 +82,7 @@ export const Home = () => {
                         <p className="home__title-presentation parrafo-article">¿No lo usas o no lo quieres? </p>
                         <p className="home__title-presentation parrafo-article"><span className="dos">Regala</span> lo que ya no uses y alegra el día de alguna persona.</p>
                         <p className="home__title-presentation parrafo-article"><span className="home__parrafo-presentation">Todo tiene una segunda oportunidad!  </span></p>
-                        <button className="home__button button-dos">Publicar ahora</button>
+                        <button className="home__button button-dos" onClick={handlePostNowClick}>Publicar ahora</button>
                     </article>
                 </div>
             </section>

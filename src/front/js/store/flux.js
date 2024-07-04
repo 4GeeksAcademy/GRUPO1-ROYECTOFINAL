@@ -16,7 +16,6 @@ const getState = ({ getStore, getActions, setStore }) => {
             contactRequestHistory: []  // Agregamos esto
         },
         actions: {
-            // Manejo de alertas para tokens expirados
             checkTokenExpiration: async (response) => {
                 if (response.status === 401) {
                     const result = await response.json();
@@ -439,7 +438,8 @@ const getState = ({ getStore, getActions, setStore }) => {
             getRequests: async () => {
                 const store = getStore();
                 try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/api/contact-requests`, {
+                    console.log('Fetching requests from backend');
+                    const response = await fetch(process.env.BACKEND_URL + "/api/contact-requests", {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
@@ -449,7 +449,11 @@ const getState = ({ getStore, getActions, setStore }) => {
                     const checkedResponse = await getActions().checkTokenExpiration(response);
                     if (checkedResponse.ok) {
                         const data = await checkedResponse.json();
-                        setStore({ requests: data.filter(request => request.status === 'Pendiente') });
+                        console.log('Fetched requests:', data);
+                        // Filtrar las solicitudes que aún no han sido aceptadas ni rechazadas
+                        const pendingRequests = data.filter(request => request.status === 'Pendiente');
+                        setStore({ requests: pendingRequests });
+                        return pendingRequests; // Devuelve los datos aquí para usarlos en el componente
                     } else {
                         console.error("Error fetching requests:", await checkedResponse.text());
                     }
@@ -512,8 +516,13 @@ const getState = ({ getStore, getActions, setStore }) => {
                         }
                     });
                     if (response.ok) {
-                        await getActions().getRequests();
-                        await getActions().getContactRequestHistory();
+                        const actions = getActions();
+                        await actions.getContactRequestHistory();
+            
+                        // Actualizar las solicitudes en el estado eliminando la solicitud aceptada
+                        const updatedRequests = store.requests.filter(request => request.id !== requestId);
+                        setStore({ requests: updatedRequests });
+            
                         return true;
                     } else {
                         console.error("Error accepting request:", await response.text());
@@ -536,8 +545,13 @@ const getState = ({ getStore, getActions, setStore }) => {
                         }
                     });
                     if (response.ok) {
-                        await getActions().getRequests();
-                        await getActions().getContactRequestHistory();
+                        const actions = getActions();
+                        await actions.getContactRequestHistory();
+            
+                        // Actualizar las solicitudes en el estado eliminando la solicitud rechazada
+                        const updatedRequests = store.requests.filter(request => request.id !== requestId);
+                        setStore({ requests: updatedRequests });
+            
                         return true;
                     } else {
                         console.error("Error rejecting request:", await response.text());

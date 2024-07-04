@@ -25,9 +25,9 @@ const Footer = () => {
 					</a>
 				</div>
 				<div>
-					<Link to="/about-us">
+					{/* <Link to="/about-us"> */}
 						<button className="footer-button">Sobre nosotros</button>
-					</Link>
+					{/* </Link> */}
 				</div>
 			</div>
 
