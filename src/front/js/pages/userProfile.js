@@ -5,13 +5,11 @@ import '../../styles/userProfile.css';
 import UserPosts from '../component/userPosts';
 import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
-import Requests from '../component/request';
 import { Tooltip } from 'react-tooltip';
 
 const UserProfile = () => {
     const { store, actions } = useContext(Context);
     const [showModal, setShowModal] = useState(false);
-    const [showRequestsModal, setShowRequestsModal] = useState(false);
     const [userData, setUserData] = useState({
         nombre: store.user?.nombre || '',
         telefono: store.user?.telefono || '',
@@ -29,8 +27,7 @@ const UserProfile = () => {
     const handleShow = () => setShowModal(true);
     const handleClose = () => setShowModal(false);
 
-    const handleRequestsShow = () => setShowRequestsModal(true);
-    const handleRequestsClose = () => setShowRequestsModal(false);
+    const handleRequestsShow = () => navigate('/contact-dashboard');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -108,9 +105,9 @@ const UserProfile = () => {
                                 SOLICITUDES
                             </Col>
                         </Row>
-                        <Card.Text className="text-center card-text">
+                        {/* <Card.Text className="text-center card-text">
                             {userDescription.substring(0, 200)}...
-                        </Card.Text>
+                        </Card.Text> */}
                     </Card.Body>
                 </Card>
             </div>
@@ -165,8 +162,6 @@ const UserProfile = () => {
                     </Form>
                 </Modal.Body>
             </Modal>
-
-            <Requests show={showRequestsModal} handleClose={handleRequestsClose} />
         </>
     );
 };

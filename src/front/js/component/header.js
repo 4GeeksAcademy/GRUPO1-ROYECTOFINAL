@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaHeart, FaEnvelope } from "react-icons/fa";
 import HeaderNavigation from "./headerNavigation";
 import "../../styles/header.css";
 import { Context } from "../store/appContext";
-import RequestsModal from "../component/requestModal"; // Asegúrate de importar el modal de requests
 import { Tooltip } from "react-tooltip"; // Importar Tooltip
 
 export const Header = () => {
     const { store, actions } = useContext(Context);
+    const navigate = useNavigate();
     const [showRequestsModal, setShowRequestsModal] = useState(false);
 
     useEffect(() => {
@@ -22,19 +22,18 @@ export const Header = () => {
         actions.logout();
     };
 
-    const handleRequestsShow = () => setShowRequestsModal(true);
-    const handleRequestsClose = () => setShowRequestsModal(false);
+    const handleRequestsShow = () => navigate('/contact-dashboard');
 
     return (
         <>
             <nav className="navbar navbar-light bg-white navbar-container-custom">
                 <div className="container d-flex justify-content-between align-items-center">
                     <Link to="/" className="logo-tag">
-                        <h1 className="logo">SECOND</h1>
-                        <h1 className="logo1">CHANCES</h1>
+                        <h1 className="logo">SEGUNDAS</h1>
+                        <h1 className="logo1">OPORTUNIDADES</h1>
                     </Link>
                     <span className="header-slogan" style={{ color: "#D95383", fontWeight: "bold" }}>
-                        Donate, Exchange, and Sell for a Cause
+                        ¡Dona y haz caridad desinteresadamente!
                     </span>
                     <div className="d-flex align-items-center header-functions-container">
                         {store.token ? (
@@ -50,17 +49,17 @@ export const Header = () => {
                                 <Tooltip id="requestsTooltip" place="bottom" effect="solid" className="custom-tooltip" />
                                 <div className="header-favorites-icon-container mr-3">
                                     {/* <Link className="header-favorites-icon" to="/"> */}
-                                        <div className="position-relative header-favorites-icon">
-                                            <FaHeart size={24} />
-                                            <span className="badge">{store.favorites.length}</span>
-                                        </div>  
+                                    <div className="position-relative header-favorites-icon">
+                                        <FaHeart size={24} />
+                                        <span className="badge">{store.favorites.length}</span>
+                                    </div>
                                     {/* </Link> */}
                                     <div className="dropdown-content">
                                         {store.favorites.length > 0 ? (
                                             store.favorites.map((favorite) => (
-                                                <Link 
-                                                    key={favorite.id} 
-                                                    to={`/post/${favorite.post.id}`} 
+                                                <Link
+                                                    key={favorite.id}
+                                                    to={`/post/${favorite.post.id}`}
                                                     className="dropdown-item"
                                                 >
                                                     <strong>{favorite.post.title}</strong>
@@ -77,10 +76,10 @@ export const Header = () => {
                         ) : (
                             <>
                                 <Link to="/login">
-                                    <button className="btn login-button header-login-button">Login</button>
+                                    <button className="btn login-button header-login-button">Iniciar Sesión</button>
                                 </Link>
                                 <Link to="/register">
-                                    <button className="btn login-button header-login-button">Register</button>
+                                    <button className="btn login-button header-login-button">Registro</button>
                                 </Link>
                             </>
                         )}
@@ -88,7 +87,6 @@ export const Header = () => {
                 </div>
             </nav>
             <HeaderNavigation />
-            <RequestsModal show={showRequestsModal} handleClose={handleRequestsClose} />
         </>
     );
 };

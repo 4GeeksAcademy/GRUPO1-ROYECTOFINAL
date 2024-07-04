@@ -37,19 +37,19 @@
 }
 
 .logo {
-  font-size: 33px;
+  font-size: 30px;
   font-family: 'Kanit', sans-serif;
   font-weight: 700;
-  color: rgb(59, 59, 59);
+  color: rgb(60, 60, 60);
 }
 
 .logo1 {
-  font-size: 33px;
+  font-size: 30px;
   font-family: 'Kanit', sans-serif;
   font-weight: 700;
-  color: rgb(59, 59, 59);
+  color: #D95383;
   margin-top: -20px;
-  margin-left:30px;
+  margin-left: 30px;
 }
 
 .logo-tag {
@@ -66,7 +66,7 @@
 
 .navbar-container-custom {
   box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.1);
-  padding: 0px;
+  padding: 4px;
 }
 
 .dropdown-content {
@@ -74,10 +74,12 @@
   position: absolute;
   background-color: white;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 1000; /* Asegura que el dropdown esté delante de otros elementos */
+  z-index: 1000;
+  /* Asegura que el dropdown esté delante de otros elementos */
   top: 30px;
   right: 0;
-  min-width: 300px; /* Ajusta este valor según sea necesario */
+  min-width: 300px;
+  /* Ajusta este valor según sea necesario */
 }
 
 .header-favorites-icon-container:hover .dropdown-content {
@@ -107,7 +109,7 @@
   background-color: #DEAD6F;
   color: white;
   font-family: 'Kanit', sans-serif;
-  border-radius: 10px !important; 
+  border-radius: 10px !important;
   transition: all 300ms ease-out;
 }
 
@@ -124,17 +126,17 @@
 }
 
 .nav-link-custom {
-  color: #393939 !important; 
-  margin: 0 15px; 
+  color: #393939 !important;
+  margin: 0 15px;
   font-size: 16px;
   font-family: 'Inter', sans-serif;
   text-decoration: none !important;
-  text-decoration: none!important;
+  text-decoration: none !important;
   box-sizing: border-box !important;
 }
 
 .nav-link-custom:hover {
-  color: #DEAD6F !important; 
+  color: #DEAD6F !important;
   border-top: 1px solid #DEAD6F;
 }
 
@@ -156,7 +158,7 @@
     color: rgb(59, 59, 59);
     margin-bottom: 14px;
   }
-  
+
   .logo1 {
     font-size: 23px;
     font-family: 'Kanit', sans-serif;
@@ -176,12 +178,17 @@
 
 /* Custom tooltip styling */
 .custom-tooltip {
-  width: auto; /* Ajustar el tamaño según sea necesario */
-  font-size: 3px; /* Hacer el texto más pequeño */
-  text-align: center; /* Centrar el texto */
+  width: auto;
+  /* Ajustar el tamaño según sea necesario */
+  font-size: 3px;
+  /* Hacer el texto más pequeño */
+  text-align: center;
+  /* Centrar el texto */
   padding: 4px 3px;
-  background-color: #D95383; /* Color de fondo del tooltip */
-  color: white; /* Color del texto del tooltip */
+  background-color: #D95383;
+  /* Color de fondo del tooltip */
+  color: white;
+  /* Color del texto del tooltip */
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

@@ -9,8 +9,8 @@ const Footer = () => {
 			<div className="footer-container">
 				<div className="">
 					<Link to="/" className="logo-tag">
-						<h1 className="footer-logo">SECOND</h1>
-						<h1 className="footer-logo1">CHANCES</h1>
+						<h1 className="footer-logo">SEGUNDAS</h1>
+						<h1 className="footer-logo1">OPORTUNIDADES</h1>
 					</Link>
 				</div>
 				<div className="icons-container">

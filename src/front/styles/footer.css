@@ -58,12 +58,12 @@
   }
   
   .footer-logo1 {
-    font-size: 29px;
+    font-size: 30px;
     font-family: 'Kanit', sans-serif;
     font-weight: 700;
-    color: rgb(59, 59, 59);
-    margin: -20px 0px 0px 20px;
-    margin-bottom: 0px;
+    color: #D95383;
+    margin-top: -20px;
+    margin-left: 30px;
   }
   
   .footer-logo {

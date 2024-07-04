@@ -43,7 +43,7 @@ export const Login = () => {
         <img className='login__img__portada' src={loginIMG} alt="Imagen de registro" />
       </figure>
       <form className='login__form' onSubmit={handleSubmit}>
-        <h1 className='login__title'>LOGIN</h1>
+        <h1 className='login__title'>Iniciá Sesión</h1>
         {error && <p className="alert alert-danger">{error}</p>}
         <label className='login__label' htmlFor="email">EMAIL</label>
         <input

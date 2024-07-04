@@ -12,7 +12,8 @@ const getState = ({ getStore, getActions, setStore }) => {
             favorites: JSON.parse(localStorage.getItem("favorites")) || [],
             currentPost: null,
             requests: [],
-            sentRequests: []
+            sentRequests: [],
+            contactRequestHistory: []  // Agregamos esto
         },
         actions: {
             // Manejo de alertas para tokens expirados
@@ -435,31 +436,10 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
-            getContactRequestHistory: async () => {
-                const store = getStore();
-                try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/api/contact-requests/history`, {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${store.token}`
-                        }
-                    });
-                    if (response.ok) {
-                        const data = await response.json();
-                        setStore({ contactRequestHistory: data });
-                    } else {
-                        console.error("Error fetching contact request history:", await response.text());
-                    }
-                } catch (error) {
-                    console.error("Error fetching contact request history:", error);
-                }
-            },
-
             getRequests: async () => {
                 const store = getStore();
                 try {
-                    const response = await fetch(process.env.BACKEND_URL + "/api/contact-requests", {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/contact-requests`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
@@ -469,7 +449,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     const checkedResponse = await getActions().checkTokenExpiration(response);
                     if (checkedResponse.ok) {
                         const data = await checkedResponse.json();
-                        setStore({ requests: data });
+                        setStore({ requests: data.filter(request => request.status === 'Pendiente') });
                     } else {
                         console.error("Error fetching requests:", await checkedResponse.text());
                     }
@@ -500,6 +480,27 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
+            getContactRequestHistory: async () => {
+                const store = getStore();
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/contact-requests/history`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${store.token}`
+                        }
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        setStore({ contactRequestHistory: data });
+                    } else {
+                        console.error("Error fetching contact request history:", await response.text());
+                    }
+                } catch (error) {
+                    console.error("Error fetching contact request history:", error);
+                }
+            },
+
             acceptRequest: async (requestId) => {
                 const store = getStore();
                 try {
@@ -511,16 +512,19 @@ const getState = ({ getStore, getActions, setStore }) => {
                         }
                     });
                     if (response.ok) {
-                        const newRequests = store.requests.filter(request => request.id !== requestId);
-                        setStore({ requests: newRequests });
+                        await getActions().getRequests();
+                        await getActions().getContactRequestHistory();
+                        return true;
                     } else {
                         console.error("Error accepting request:", await response.text());
+                        return false;
                     }
                 } catch (error) {
                     console.error("Error accepting request:", error);
+                    return false;
                 }
             },
-
+            
             rejectRequest: async (requestId) => {
                 const store = getStore();
                 try {
@@ -532,13 +536,16 @@ const getState = ({ getStore, getActions, setStore }) => {
                         }
                     });
                     if (response.ok) {
-                        const newRequests = store.requests.filter(request => request.id !== requestId);
-                        setStore({ requests: newRequests });
+                        await getActions().getRequests();
+                        await getActions().getContactRequestHistory();
+                        return true;
                     } else {
                         console.error("Error rejecting request:", await response.text());
+                        return false;
                     }
                 } catch (error) {
                     console.error("Error rejecting request:", error);
+                    return false;
                 }
             },
 

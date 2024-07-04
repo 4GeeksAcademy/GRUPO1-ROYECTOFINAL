@@ -17,6 +17,7 @@ import CreatePost from "./pages/createPost";
 import EditPost from "./pages/editPost";  // Asegúrate de tener esta página
 import PostDetails from "./pages/postDetails";
 import PrivateRoute from "./utils/privateRoute";
+import ContactDashboard from "./pages/ContactDashboard"; // Importa el nuevo componente
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
@@ -32,11 +33,11 @@ const Layout = () => {
                         <Route element={<Login />} path="/login" />
                         <Route element={<Register />} path="/register" />
                         <Route element={<PostDetails />} path="/post/:postId" />
-
                         <Route element={<PrivateRoute />}>
                             <Route element={<CreatePost />} path="/create-post" />
-                            <Route element={<EditPost />} path="/edit-post/:postId" />  // Agregar ruta para editar post
+                            <Route element={<EditPost />} path="/edit-post/:postId" />  {/* Agregar ruta para editar post */}
                             <Route element={<UserProfile />} path="/profile" />
+                            <Route element={<ContactDashboard />} path="/contact-dashboard" /> {/* Añade esta línea */}
                         </Route>
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />

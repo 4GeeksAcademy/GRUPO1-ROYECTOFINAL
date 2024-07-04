@@ -1,0 +1,28 @@
+/* ContactDashboard.css */
+.contendor-general-contact-dashboard {
+    min-height: auto;
+    margin-bottom: 7rem;
+}
+
+.accept-button {
+    background-color: #D95383;
+    border-color: #D95383;
+    margin-right: 10px; /* Separación entre botones */
+}
+.accept-button:hover {
+    background-color: #c04a73;
+    border-color: #D95383;
+    margin-right: 10px; /* Separación entre botones */
+}
+
+.reject-button {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+.reject-button:hover {
+    background-color: #056bd7;
+    border-color: #007bff;
+}
+.default-text {
+    margin-bottom: 2rem;
+}
