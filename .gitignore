@@ -1,7 +1,7 @@
 # ignore all files starting with .
 .*
 
-migrations/
+# migrations/
 venv/
 
 # track this file .gitignore (i.e. do NOT ignore it)
