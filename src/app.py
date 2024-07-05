@@ -438,9 +438,6 @@ def get_contact_request_history():
 
     return jsonify(result), 200
 
-# Registrar el Blueprint
-app.register_blueprint(api, url_prefix='/api')
-
 if __name__ == '__main__':
     with app.app_context():
         create_hardcoded_data()
