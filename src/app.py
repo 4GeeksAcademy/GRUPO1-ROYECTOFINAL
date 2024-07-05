@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify, Blueprint
+from flask import Flask, request, jsonify, send_from_directory, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -25,15 +25,12 @@ cloudinary.config(
 load_dotenv()
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
-static_file_dir = os.path.join(os.path.dirname(
-    os.path.realpath(__file__)), '../public/')
-app = Flask(__name__)
+static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../public/')
+app = Flask(__name__, static_folder=static_file_dir, static_url_path='/')
 app.url_map.strict_slashes = False
 
 # Configuración de CORS para permitir solicitudes desde tu frontend
 CORS(app, resources={r"/api/*": {"origins": "*"}})
-
-app.url_map.strict_slashes = False
 
 # Configuración de la base de datos
 db_url = os.getenv("DATABASE_URL")
@@ -72,7 +69,18 @@ def handle_invalid_usage(error):
 # Generate sitemap with all your endpoints
 @app.route('/')
 def sitemap():
-    return generate_sitemap(app)
+    if ENV == "development":
+        return generate_sitemap(app)
+    return send_from_directory(static_file_dir, 'index.html')
+
+# Any other endpoint will try to serve it like a static file
+@app.route('/<path:path>', methods=['GET'])
+def serve_any_other_file(path):
+    if not os.path.isfile(os.path.join(static_file_dir, path)):
+        path = 'index.html'
+    response = send_from_directory(static_file_dir, path)
+    response.cache_control.max_age = 0  # avoid cache memory
+    return response
 
 # Ruta para subir imagen
 @api.route('/upload', methods=['POST'])
@@ -192,9 +200,7 @@ def delete_user(user_id):
         return jsonify({"msg": "User not found"}), 404
 
     try:
-        # Eliminar todas las solicitudes de contacto donde el usuario es el remitente o el receptor
         ContactRequest.query.filter((ContactRequest.sender_id == user_id) | (ContactRequest.receiver_id == user_id)).delete()
-
         db.session.delete(user)
         db.session.commit()
         return jsonify({"msg": "User deleted"}), 200
