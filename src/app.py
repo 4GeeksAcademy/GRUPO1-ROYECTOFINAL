@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify, send_from_directory, Blueprint
+from flask import Flask, request, jsonify, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -24,7 +24,7 @@ cloudinary.config(
 # Cargar variables de entorno
 load_dotenv()
 
-app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
+app = Flask(__name__)
 
 # Configuración de CORS para permitir solicitudes desde tu frontend
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -65,17 +65,10 @@ def create_hardcoded_data():
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
-# Servir los archivos estáticos del frontend
+# Generate sitemap with all your endpoints
 @app.route('/')
-def serve():
-    return send_from_directory(app.static_folder, 'index.html')
-
-@app.route('/<path:path>')
-def static_proxy(path):
-    return send_from_directory(app.static_folder, path)
-
-# Registrar el Blueprint
-app.register_blueprint(api, url_prefix='/api')
+def sitemap():
+    return generate_sitemap(app)
 
 # Ruta para subir imagen
 @api.route('/upload', methods=['POST'])
@@ -87,6 +80,7 @@ def upload_image():
     return jsonify({"msg": "No file uploaded"}), 400
 
 # Rutas
+
 @api.route('/register', methods=['POST'])
 def register():
     try:
