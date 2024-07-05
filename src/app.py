@@ -25,7 +25,7 @@ cloudinary.config(
 load_dotenv()
 
 # app = Flask(__name__)
-app = Flask(__name__, static_folder='public', static_url_path='')
+app = Flask(__name__, static_folder='dist', static_url_path='')
 
 # Configuración de CORS para permitir solicitudes desde tu frontend
 CORS(app, resources={r"/api/*": {"origins": "*"}})
